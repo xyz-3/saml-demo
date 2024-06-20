@@ -11,7 +11,7 @@ public class SpControllerTest extends AbstractIntegrationTest {
 
     @Test
     public void setSsoServiceURL() throws Exception {
-        String acs = "https://localhost:8080/ssoServiceURL";
+        String acs = "https://localhost:8081/ssoServiceURL";
         api(acs, "/api/ssoServiceURL");
 
         assertEquals(acs, spConfiguration.getIdpSSOServiceURL());
@@ -27,7 +27,7 @@ public class SpControllerTest extends AbstractIntegrationTest {
 
     @Test
     public void setAssertionConsumerServiceURL() throws Exception {
-        String assertionConsumerServiceURL = "https://localhost:8080/assertionConsumerServiceURL";
+        String assertionConsumerServiceURL = "https://localhost:8081/assertionConsumerServiceURL";
         api(assertionConsumerServiceURL, "/api/assertionConsumerServiceURL");
 
         assertEquals(assertionConsumerServiceURL, spConfiguration.getAssertionConsumerServiceURL());

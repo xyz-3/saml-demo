@@ -81,7 +81,7 @@ public class IdpControllerTest extends AbstractIntegrationTest {
     public void setAcsEndpoint() {
         assertNull(idpConfiguration.getAcsEndpoint());
 
-        String acs = "https://localhost:8080/acs";
+        String acs = "https://localhost:8081/acs";
         api(acs, "/api/acsendpoint");
 
         assertEquals(acs, idpConfiguration.getAcsEndpoint());
