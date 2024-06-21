@@ -8,6 +8,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URI;
 
+/*
+继承自SAMLContextProviderLB，用于处理在负载均衡代理环境中的 SAML 上下文配置。
+ */
 public class ProxiedSAMLContextProviderLB extends SAMLContextProviderLB {
 
     public ProxiedSAMLContextProviderLB(URI uri) {
@@ -21,8 +24,12 @@ public class ProxiedSAMLContextProviderLB extends SAMLContextProviderLB {
         }
     }
 
+    /*
+    重写方法以填充通用的 SAML 上下文信息。在处理通过代理服务器进行的 SAML 认证时特别有用。
+     */
     @Override
-    public void populateGenericContext(HttpServletRequest request, HttpServletResponse response, SAMLMessageContext context) throws MetadataProviderException {
+    public void populateGenericContext(HttpServletRequest request, HttpServletResponse response, SAMLMessageContext context)
+            throws MetadataProviderException {
         super.populateGenericContext(request, response, context);
     }
 

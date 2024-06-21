@@ -54,7 +54,8 @@ public class SsoController {
     }
 
     @SuppressWarnings("unchecked")
-    private void doSSO(HttpServletRequest request, HttpServletResponse response, Authentication authentication, boolean postRequest) throws ValidationException, SecurityException, MessageDecodingException, MarshallingException, SignatureException, MessageEncodingException, MetadataProviderException, IOException, ServletException {
+    private void doSSO(HttpServletRequest request, HttpServletResponse response, Authentication authentication, boolean postRequest)
+            throws ValidationException, SecurityException, MessageDecodingException, MarshallingException, SignatureException, MessageEncodingException, MetadataProviderException, IOException, ServletException {
         SAMLMessageContext messageContext = samlMessageHandler.extractSAMLMessageContext(request, response, postRequest);
         AuthnRequest authnRequest = (AuthnRequest) messageContext.getInboundSAMLMessage();
 
@@ -106,7 +107,11 @@ public class SsoController {
             FederatedUserAuthenticationToken token = new FederatedUserAuthenticationToken(
                     uid,
                     authentication.getCredentials(),
-                    Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
+                    authentication.getAuthorities().stream()
+                            .map(Object::toString)
+                            .map(SimpleGrantedAuthority::new)
+                            .collect(toList()));
+//                    Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
             token.setAttributes(result);
             idpConfiguration.getUsers().removeIf(existingUser -> existingUser.getPrincipal().equals(uid));
             idpConfiguration.getUsers().add(token);

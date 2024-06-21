@@ -34,9 +34,7 @@ public class AuthenticationProvider implements org.springframework.security.auth
                     .filter(token ->
                             token.getPrincipal().equals(authentication.getPrincipal()) &&
                                     token.getCredentials().equals(authentication.getCredentials()))
-                    .findFirst().map(userAuthenticationToken ->
-                            //need to copy or else credentials are erased for future logins
-                            userAuthenticationToken.clone())
+                    .findFirst().map(FederatedUserAuthenticationToken::clone)
                     .orElseThrow(() -> new InvalidAuthenticationException("User not found or bad credentials") {
                     });
         }

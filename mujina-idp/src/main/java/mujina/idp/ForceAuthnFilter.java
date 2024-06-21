@@ -20,15 +20,18 @@ public class ForceAuthnFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
         String servletPath = request.getServletPath();
-        if (servletPath == null || !servletPath.endsWith("SingleSignOnService") || request.getMethod().equalsIgnoreCase("GET")) {
+        if (servletPath == null || !servletPath.endsWith("SingleSignOnService") ||
+                request.getMethod().equalsIgnoreCase("GET")) {
             chain.doFilter(request, response);
             return;
         }
         SAMLMessageContext messageContext;
         try {
-            messageContext = samlMessageHandler.extractSAMLMessageContext(request, response, request.getMethod().equalsIgnoreCase("POST"));
+            messageContext = samlMessageHandler.extractSAMLMessageContext(request, response,
+                    request.getMethod().equalsIgnoreCase("POST"));
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }

@@ -10,6 +10,7 @@ public class SharedController {
 
     protected final Logger LOG = LoggerFactory.getLogger(getClass());
 
+    // SharedConfiguration - 共享配置的实例
     protected SharedConfiguration configuration;
 
     public SharedController(SharedConfiguration configuration) {

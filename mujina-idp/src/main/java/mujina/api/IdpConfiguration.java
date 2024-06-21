@@ -17,7 +17,7 @@ import java.util.*;
 @Component
 public class IdpConfiguration extends SharedConfiguration {
 
-    private String defaultEntityId;
+    private String defaultEntityId; //IDP标识符
     private Map<String, List<String>> attributes = new TreeMap<>();
     private List<FederatedUserAuthenticationToken> users = new ArrayList<>();
     private String acsEndpoint;
@@ -58,9 +58,11 @@ public class IdpConfiguration extends SharedConfiguration {
     private void resetUsers() {
         users.clear();
         users.addAll(Arrays.asList(
-                new FederatedUserAuthenticationToken("admin", "secret", Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"),
+                new FederatedUserAuthenticationToken("admin", "secret",
+                        Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"),
                         new SimpleGrantedAuthority("ROLE_ADMIN"))),
-                new FederatedUserAuthenticationToken("user", "secret", Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")))));
+                new FederatedUserAuthenticationToken("user", "secret",
+                        Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")))));
     }
 
     private void resetAttributes() {

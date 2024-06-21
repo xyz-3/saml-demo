@@ -3,13 +3,14 @@
 <head>
     <title>Service Provider</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="/main.css"/>
+    <link rel="stylesheet" type="text/css" href="/main.css">
 </head>
 <body>
     <section class="user-container">
         <section class="attributes">
             <h1>Service Provider</h1>
             <a class="button" th:href="@{/logout}">Logout</a>
+            <p>This is admin user page.</p>
             <p>The following attributes were provided by your identity provider:</p>
             <ul>
                 <li th:text="${user.nameIDType}"></li>

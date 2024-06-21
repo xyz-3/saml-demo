@@ -11,7 +11,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Credential implements Serializable {
+public class  Credential implements Serializable {
 
     private String certificate;
     private String key;

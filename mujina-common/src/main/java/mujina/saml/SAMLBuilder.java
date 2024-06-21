@@ -21,6 +21,9 @@ import java.util.UUID;
 
 import static java.util.stream.Collectors.toList;
 
+/*
+提供了一组静态方法来构建和操作各种 SAML 对象（如 Assertion、Issuer、Subject 等）
+ */
 public class SAMLBuilder {
 
     private static final XMLObjectBuilderFactory builderFactory = Configuration.getBuilderFactory();
@@ -69,7 +72,7 @@ public class SAMLBuilder {
         return status;
     }
 
-    public static Status buildStatus(String value, String subStatus, String message) {
+/*    public static Status buildStatus(String value, String subStatus, String message) {
         Status status = buildStatus(value);
 
         StatusCode subStatusCode = buildSAMLObject(StatusCode.class, StatusCode.DEFAULT_ELEMENT_NAME);
@@ -81,8 +84,11 @@ public class SAMLBuilder {
         status.setStatusMessage(statusMessage);
 
         return status;
-    }
+    }*/
 
+    /*
+    构建一个 Assertion 对象，包含了 SAMLPrincipal、AuthnContextClassRef、Status 和 entityId
+     */
     public static Assertion buildAssertion(SAMLPrincipal principal, String authnContextClassRefValue, Status status, String entityId) {
         Assertion assertion = buildSAMLObject(Assertion.class, Assertion.DEFAULT_ELEMENT_NAME);
 
@@ -116,8 +122,11 @@ public class SAMLBuilder {
 
         return assertion;
     }
-
-    public static void signAssertion(SignableXMLObject signableXMLObject, Credential signingCredential) throws MarshallingException, SignatureException {
+    /*
+    为一个 SignableXMLObject 对象签名
+     */
+    public static void signAssertion(SignableXMLObject signableXMLObject, Credential signingCredential)
+            throws MarshallingException, SignatureException {
         Signature signature = buildSAMLObject(Signature.class, Signature.DEFAULT_ELEMENT_NAME);
 
         signature.setSigningCredential(signingCredential);
@@ -153,7 +162,7 @@ public class SAMLBuilder {
     }
 
     public static String randomSAMLId() {
-        return "_" + UUID.randomUUID().toString();
+        return "_" + UUID.randomUUID();
     }
 
     private static AuthnStatement buildAuthnStatement(DateTime authnInstant, String entityID, String authnContextClassRefValue) {

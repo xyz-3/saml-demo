@@ -1,7 +1,10 @@
 package mujina.saml;
 
+import lombok.Getter;
+
 import java.util.List;
 
+@Getter
 public class SAMLAttribute {
 
     private final String name;
@@ -10,14 +13,6 @@ public class SAMLAttribute {
     public SAMLAttribute(String name, List<String> values) {
         this.name = name;
         this.values = values;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public List<String> getValues() {
-        return values;
     }
 
     public String getValue() {

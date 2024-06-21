@@ -18,6 +18,9 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.util.ArrayList;
 import java.util.Base64;
 
+/*
+提供了一些静态方法来帮助定位和操作 Java 的 KeyStore 对象
+ */
 public class KeyStoreLocator {
 
     private static CertificateFactory certificateFactory;
@@ -30,6 +33,9 @@ public class KeyStoreLocator {
         }
     }
 
+    /*
+    创建一个新的 KeyStore 对象，使用给定的密码
+     */
     public static KeyStore createKeyStore(String pemPassPhrase) {
         try {
             KeyStore keyStore = KeyStore.getInstance("JKS");
@@ -42,7 +48,8 @@ public class KeyStoreLocator {
     }
 
     //privateKey must be in the DER unencrypted PKCS#8 format. See README.md
-    public static void addPrivateKey(KeyStore keyStore, String alias, String privateKey, String certificate, String password) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, KeyStoreException, CertificateException {
+    public static void addPrivateKey(KeyStore keyStore, String alias, String privateKey, String certificate, String password)
+            throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, KeyStoreException, CertificateException {
         String wrappedCert = wrapCert(certificate);
         byte[] decodedKey = Base64.getDecoder().decode(privateKey.getBytes());
 
@@ -58,6 +65,9 @@ public class KeyStoreLocator {
         keyStore.setKeyEntry(alias, privKey, passwordChars, certs.toArray(new Certificate[certs.size()]));
     }
 
+    /*
+    将证书字符串包装成标准格式
+     */
     private static String wrapCert(String certificate) {
         return "-----BEGIN CERTIFICATE-----\n" + certificate + "\n-----END CERTIFICATE-----";
     }
