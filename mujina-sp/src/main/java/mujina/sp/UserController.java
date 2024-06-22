@@ -29,6 +29,7 @@ public class UserController {
     @GetMapping({"user", "/user.html"})
     public String user(Authentication authentication, ModelMap modelMap) {
         modelMap.addAttribute("user", authentication.getPrincipal());
+        modelMap.addAttribute("authorities", authentication.getAuthorities());
         return "user";
     }
 
@@ -42,6 +43,26 @@ public class UserController {
         }
         modelMap.addAttribute("user", authentication.getPrincipal());
         return "admin";
+    }
+
+    @GetMapping({"page1", "/page1.html"})
+    public String page1(Authentication authentication, ModelMap modelMap) {
+        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("AUTH_PAGE1"))) {
+            modelMap.addAttribute("user", authentication.getPrincipal());
+            return "page1";
+        } else {
+            return "redirect:/home";
+        }
+    }
+
+    @GetMapping({"page2", "/page2.html"})
+    public String page2(Authentication authentication, ModelMap modelMap) {
+        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("AUTH_PAGE2"))) {
+            modelMap.addAttribute("user", authentication.getPrincipal());
+            return "page2";
+        } else {
+            return "redirect:/home";
+        }
     }
 
 }

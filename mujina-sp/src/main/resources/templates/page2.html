@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Service Provider</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/main.css"/>
+</head>
+<body>
+<section class="user-container">
+    <section class="attributes">
+        <h1>Service Provider</h1>
+        <a class="button" th:href="@{/logout}">Logout</a>
+        <p>Welcome, <span th:text="${user.nameID}"></span></p>
+        <p>This is Page2.</p>
+        <a class="button" th:href="@{/user.html}">Back to User Page</a>
+    </section>
+    <a class="powered-by" href="https://openconext.org/" target="_blank">Copyright © 2018 OpenConext</a>
+</section>
+</body>
+</html>

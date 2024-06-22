@@ -10,15 +10,21 @@
         <section class="attributes">
             <h1>Service Provider</h1>
             <a class="button" th:href="@{/logout}">Logout</a>
-            <p>The following attributes were provided by your identity provider:</p>
-            <ul>
-                <li th:text="${user.nameIDType}"></li>
-                <li th:text="${user.nameID}"></li>
-            </ul>
-            <ul th:each="attr : ${user.attributes}">
-                <li th:text="${attr.name}"></li>
-                <li th:text="${attr.value}"></li>
-            </ul>
+            <p>Welcome, <span th:text="${user.nameID}"></span></p>
+<!--            <p>The following attributes were provided by your identity provider:</p>-->
+<!--            <ul>-->
+<!--                <li th:text="${user.nameIDType}"></li>-->
+<!--                <li th:text="${user.nameID}"></li>-->
+<!--            </ul>-->
+<!--            <ul th:each="attr : ${user.attributes}">-->
+<!--                <li th:text="${attr.name}"></li>-->
+<!--                <li th:text="${attr.value}"></li>-->
+<!--            </ul>-->
+            <!-- Conditional buttons based on user roles -->
+            <div>
+                <a class="button" th:if="${authorities.?[authority == 'AUTH_PAGE1'].size() > 0}" th:href="@{/page1.html}">Page1</a>
+                <a class="button" th:if="${authorities.?[authority == 'AUTH_PAGE2'].size() > 0}" th:href="@{/page2.html}">Page2</a>
+            </div>
         </section>
         <a class="powered-by" href="https://openconext.org/" target="_blank">Copyright © 2018 OpenConext</a>
     </section>
