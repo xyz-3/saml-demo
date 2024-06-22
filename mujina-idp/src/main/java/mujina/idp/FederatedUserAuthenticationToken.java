@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+/*
+用户的认证令牌，在UsernamePasswordAuthenticationToken的基础上，增加了attributes属性
+ */
 @Getter
 @Setter
 public class FederatedUserAuthenticationToken extends UsernamePasswordAuthenticationToken {

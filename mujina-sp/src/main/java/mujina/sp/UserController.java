@@ -14,12 +14,16 @@ public class UserController {
      */
     @GetMapping("/")
     public String index(Authentication authentication) {
-        if (authentication == null) {
-            return "index";
-        }
+        return authentication == null ? "index" : "redirect:/home";
+    }
 
-        return authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")) ?
-                "redirect:/admin.html" : "redirect:/user.html";
+    @GetMapping("/home")
+    public String home(Authentication authentication) {
+        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            return "redirect:/admin.html";
+        } else {
+            return "redirect:/user.html";
+        }
     }
 
     @GetMapping({"user", "/user.html"})
@@ -30,6 +34,12 @@ public class UserController {
 
     @GetMapping({"admin", "/admin.html"})
     public String admin(Authentication authentication, ModelMap modelMap) {
+        if(authentication == null) {
+            return "redirect:/";
+        }
+        if(authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+            return "redirect:/home";
+        }
         modelMap.addAttribute("user", authentication.getPrincipal());
         return "admin";
     }

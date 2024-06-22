@@ -71,8 +71,12 @@ public class SsoController {
                 authentication.getName(),
                 attributes.stream()
                         .filter(attr -> "urn:oasis:names:tc:SAML:1.1:nameid-format".equals(attr.getName()))
-                        .findFirst().map(attr -> attr.getValue()).orElse(NameIDType.UNSPECIFIED),
+                        .findFirst().map(SAMLAttribute::getValue).orElse(NameIDType.UNSPECIFIED),
                 attributes,
+                authentication.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(toList()),
                 authnRequest.getIssuer().getValue(),
                 authnRequest.getID(),
                 assertionConsumerServiceURL,
@@ -91,6 +95,12 @@ public class SsoController {
                 .findAny()
                 .map(FederatedUserAuthenticationToken::getAttributes);
         optionalMap.ifPresent(result::putAll);
+
+        // Add roles as attributes
+        List<String> roles = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+        result.put("roles", roles);
 
         //See SAMLAttributeAuthenticationFilter#setDetails
         Map<String, String[]> parameterMap = (Map<String, String[]>) authentication.getDetails();
