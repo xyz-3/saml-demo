@@ -63,6 +63,20 @@ acr:
     - "https://refeds.org/profile/mfa"
 
 spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/saml?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: Xyc20020327
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    database: mysql
+    show-sql: true
+    thymeleaf:
+      cache: false
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
   mvc:
     favicon:
       enabled: false

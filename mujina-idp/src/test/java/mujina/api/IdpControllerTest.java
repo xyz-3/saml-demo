@@ -2,6 +2,7 @@ package mujina.api;
 
 import io.restassured.common.mapper.TypeRef;
 import mujina.AbstractIntegrationTest;
+import mujina.Entity.User;
 import org.junit.Test;
 
 import java.util.Arrays;

@@ -1,5 +1,6 @@
 package mujina.api;
 
+import mujina.Entity.User;
 import mujina.idp.FederatedUserAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

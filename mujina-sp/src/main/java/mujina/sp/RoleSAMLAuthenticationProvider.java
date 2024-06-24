@@ -2,7 +2,6 @@ package mujina.sp;
 
 import mujina.saml.SAMLPrincipal;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.saml.SAMLAuthenticationProvider;
 import org.springframework.security.saml.SAMLCredential;
 
