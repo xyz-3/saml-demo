@@ -2,8 +2,7 @@ package mujina.idp;
 
 import mujina.api.IdpConfiguration;
 import mujina.Entity.User;
-import mujina.repository.UserAuthoritiesRepository;
-import mujina.repository.UserRepository;
+import mujina.dao.UserDao;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -20,15 +19,12 @@ import static mujina.api.AuthenticationMethod.ALL;
 
 public class AuthenticationProvider implements org.springframework.security.authentication.AuthenticationProvider {
 
-    private final UserAuthoritiesRepository userAuthoritiesRepository;
-
-    private final UserRepository userRepository;
+    private final UserDao userDao;
 
     private final IdpConfiguration idpConfiguration;
 
-    public AuthenticationProvider(UserAuthoritiesRepository userAuthoritiesRepository, UserRepository userRepository, IdpConfiguration idpConfiguration) {
-        this.userAuthoritiesRepository = userAuthoritiesRepository;
-        this.userRepository = userRepository;
+    public AuthenticationProvider(UserDao userDao, IdpConfiguration idpConfiguration) {
+        this.userDao = userDao;
         this.idpConfiguration = idpConfiguration;
     }
 
@@ -43,20 +39,18 @@ public class AuthenticationProvider implements org.springframework.security.auth
                     authentication.getCredentials(),
                     Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER")));
         } else {
-            Optional<User> user = userRepository.findByNameAndPassword(authentication.getPrincipal().toString(), authentication.getCredentials().toString());
-            if (user.isPresent()) {
-                List<GrantedAuthority> authorities = userAuthoritiesRepository.findAllAuthoritiesByUserId(user.get().getId())
-                        .stream()
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
-                FederatedUserAuthenticationToken token = new FederatedUserAuthenticationToken(
-                        authentication.getPrincipal(),
-                        authentication.getCredentials(),
-                        authorities);
-                return token;
-            } else {
+            User user = userDao.getUser(authentication.getPrincipal().toString(), authentication.getCredentials().toString());
+            if (user == null) {
                 throw new InvalidAuthenticationException("User not found or bad credentials");
             }
+            List<GrantedAuthority> authorities = user.getAuthorities()
+                    .stream()
+                    .map(SimpleGrantedAuthority::new)
+                    .collect(Collectors.toList());
+            return new FederatedUserAuthenticationToken(
+                    authentication.getPrincipal(),
+                    authentication.getCredentials(),
+                    authorities);
         }
     }
 

@@ -1,8 +1,7 @@
 package mujina.idp;
 
 import mujina.api.IdpConfiguration;
-import mujina.repository.UserAuthoritiesRepository;
-import mujina.repository.UserRepository;
+import mujina.dao.UserDao;
 import mujina.saml.KeyStoreLocator;
 import mujina.saml.UpgradedSAMLBootstrap;
 import org.opensaml.common.binding.decoding.URIComparator;
@@ -121,10 +120,7 @@ public class WebSecurityConfigurer implements WebMvcConfigurer {
         private SAMLMessageHandler samlMessageHandler;
 
         @Autowired
-        private UserRepository userRepository;
-
-        @Autowired
-        private UserAuthoritiesRepository userAuthoritiesRepository;
+        private UserDao userDao;
 
         private SAMLAttributeAuthenticationFilter authenticationFilter() throws Exception {
             SAMLAttributeAuthenticationFilter filter = new SAMLAttributeAuthenticationFilter();
@@ -162,7 +158,7 @@ public class WebSecurityConfigurer implements WebMvcConfigurer {
 
         @Override
         public void configure(AuthenticationManagerBuilder auth) {
-            auth.authenticationProvider(new AuthenticationProvider(userAuthoritiesRepository, userRepository, idpConfiguration));
+            auth.authenticationProvider(new AuthenticationProvider(userDao, idpConfiguration));
         }
 
         @Bean
