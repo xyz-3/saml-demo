@@ -21,6 +21,7 @@ public class IdpConfiguration extends SharedConfiguration {
     private Map<String, List<String>> attributes = new TreeMap<>();
     private List<FederatedUserAuthenticationToken> users = new ArrayList<>();
     private String acsEndpoint;
+    private String slsEndpoint;
     private AuthenticationMethod authenticationMethod;
     private AuthenticationMethod defaultAuthenticationMethod;
     private final String idpPrivateKey;
@@ -51,26 +52,27 @@ public class IdpConfiguration extends SharedConfiguration {
         resetKeyStore(defaultEntityId, idpPrivateKey, idpCertificate);
         resetUsers();
         setAcsEndpoint(null);
+        setSlsEndpoint(null);
         setAuthenticationMethod(this.defaultAuthenticationMethod);
         setSignatureAlgorithm(getDefaultSignatureAlgorithm());
     }
 
     private void resetUsers() {
         users.clear();
-        users.addAll(Arrays.asList(
-                new FederatedUserAuthenticationToken("admin", "secret",
-                        Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"),
-                        new SimpleGrantedAuthority("ROLE_ADMIN"))),
-                new FederatedUserAuthenticationToken("user0", "secret",
-                        Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"),
-                                new SimpleGrantedAuthority("AUTH_PAGE1"),
-                                new SimpleGrantedAuthority("AUTH_PAGE2"))),
-                new FederatedUserAuthenticationToken("user1", "secret",
-                Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"),
-                        new SimpleGrantedAuthority("AUTH_PAGE1"))),
-                new FederatedUserAuthenticationToken("user2", "secret",
-                        Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"),
-                                new SimpleGrantedAuthority("AUTH_PAGE2")))));
+//        users.addAll(Arrays.asList(
+//                new FederatedUserAuthenticationToken("admin", "secret",
+//                        Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"),
+//                        new SimpleGrantedAuthority("ROLE_ADMIN"))),
+//                new FederatedUserAuthenticationToken("user0", "secret",
+//                        Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"),
+//                                new SimpleGrantedAuthority("AUTH_PAGE1"),
+//                                new SimpleGrantedAuthority("AUTH_PAGE2"))),
+//                new FederatedUserAuthenticationToken("user1", "secret",
+//                Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"),
+//                        new SimpleGrantedAuthority("AUTH_PAGE1"))),
+//                new FederatedUserAuthenticationToken("user2", "secret",
+//                        Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"),
+//                                new SimpleGrantedAuthority("AUTH_PAGE2")))));
     }
 
     private void resetAttributes() {

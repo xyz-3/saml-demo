@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/*
+Force Filter 和正常流程 Filter Chain
+ */
 public class ForceAuthnFilter extends OncePerRequestFilter {
 
     private SAMLMessageHandler samlMessageHandler;
@@ -24,6 +27,7 @@ public class ForceAuthnFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String servletPath = request.getServletPath();
         if (servletPath == null || !servletPath.endsWith("SingleSignOnService") ||
+                !servletPath.endsWith("SingleLogoutService") ||
                 request.getMethod().equalsIgnoreCase("GET")) {
             chain.doFilter(request, response);
             return;

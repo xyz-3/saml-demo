@@ -12,11 +12,13 @@ import org.springframework.util.StringUtils;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static mujina.api.AuthenticationMethod.ALL;
 
+/*
+提供身份验证服务的类
+ */
 public class AuthenticationProvider implements org.springframework.security.authentication.AuthenticationProvider {
 
     private final UserDao userDao;

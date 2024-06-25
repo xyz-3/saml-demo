@@ -43,13 +43,15 @@ public class SsoController {
 
     @GetMapping("/SingleSignOnService")
     public void singleSignOnServiceGet(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-            throws IOException, MarshallingException, SignatureException, MessageEncodingException, ValidationException, SecurityException, MessageDecodingException, MetadataProviderException, ServletException {
+            throws IOException, MarshallingException, SignatureException, MessageEncodingException, ValidationException,
+            SecurityException, MessageDecodingException, MetadataProviderException, ServletException {
         doSSO(request, response, authentication, false);
     }
 
     @PostMapping("/SingleSignOnService")
     public void singleSignOnServicePost(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-            throws IOException, MarshallingException, SignatureException, MessageEncodingException, ValidationException, SecurityException, MessageDecodingException, MetadataProviderException, ServletException {
+            throws IOException, MarshallingException, SignatureException, MessageEncodingException, ValidationException,
+            SecurityException, MessageDecodingException, MetadataProviderException, ServletException {
         doSSO(request, response, authentication, true);
     }
 
@@ -82,7 +84,7 @@ public class SsoController {
                 assertionConsumerServiceURL,
                 messageContext.getRelayState());
 
-        samlMessageHandler.sendAuthnResponse(principal, authnContextClassRefValue, response);
+        samlMessageHandler.sendAuthResponse(principal, response, authnContextClassRefValue);
     }
 
     @SuppressWarnings("unchecked")
