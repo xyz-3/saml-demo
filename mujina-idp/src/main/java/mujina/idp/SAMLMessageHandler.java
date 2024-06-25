@@ -12,6 +12,7 @@ import org.opensaml.common.binding.encoding.SAMLMessageEncoder;
 import org.opensaml.common.xml.SAMLConstants;
 import org.opensaml.saml2.core.*;
 import org.opensaml.saml2.metadata.Endpoint;
+import org.opensaml.saml2.metadata.SingleLogoutService;
 import org.opensaml.saml2.metadata.SingleSignOnService;
 import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.opensaml.ws.message.decoder.MessageDecodingException;
@@ -137,6 +138,40 @@ public class SAMLMessageHandler {
 
         encoder.encode(messageContext);
 
+    }
+
+    public void sendLogoutResponse(SAMLPrincipal principal, HttpServletResponse response) throws MarshallingException, SignatureException, MessageEncodingException {
+        Status status = buildStatus(StatusCode.SUCCESS_URI);
+
+        String entityId = idpConfiguration.getEntityId();
+        Credential signingCredential = resolveCredential(entityId);
+
+        LogoutResponse logoutResponse = buildSAMLObject(LogoutResponse.class, LogoutResponse.DEFAULT_ELEMENT_NAME);
+        Issuer issuer = buildIssuer(entityId);
+
+        logoutResponse.setIssuer(issuer);
+        logoutResponse.setID(SAMLBuilder.randomSAMLId());
+        logoutResponse.setIssueInstant(new DateTime());
+        logoutResponse.setInResponseTo(principal.getRequestID());
+
+        logoutResponse.setStatus(status);
+
+        Endpoint endpoint = buildSAMLObject(Endpoint.class, SingleLogoutService.DEFAULT_ELEMENT_NAME);
+        endpoint.setLocation(principal.getAssertionConsumerServiceURL());
+
+        HttpServletResponseAdapter outTransport = new HttpServletResponseAdapter(response, false);
+
+        BasicSAMLMessageContext messageContext = new BasicSAMLMessageContext();
+
+        messageContext.setOutboundMessageTransport(outTransport);
+        messageContext.setPeerEntityEndpoint(endpoint);
+        messageContext.setOutboundSAMLMessage(logoutResponse);
+        messageContext.setOutboundSAMLMessageSigningCredential(signingCredential);
+
+        messageContext.setOutboundMessageIssuer(entityId);
+        messageContext.setRelayState(principal.getRelayState());
+
+        encoder.encode(messageContext);
     }
 
     private Credential resolveCredential(String entityId) {

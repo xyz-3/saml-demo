@@ -22,6 +22,7 @@ public class ConfigurableSAMLProcessor extends SAMLProcessorImpl {
         this.spConfiguration = spConfiguration;
     }
 
+    // TODO:
     @Override
     public SAMLMessageContext sendMessage(SAMLMessageContext samlContext, boolean sign)
             throws SAMLException, MetadataProviderException, MessageEncodingException {

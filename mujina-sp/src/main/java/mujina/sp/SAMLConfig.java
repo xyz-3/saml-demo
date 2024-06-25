@@ -12,8 +12,10 @@ import org.opensaml.saml2.core.Assertion;
 import org.opensaml.saml2.core.AuthnRequest;
 import org.opensaml.xml.encryption.DecryptionException;
 import org.opensaml.xml.parse.ParserPool;
+import org.opensaml.xml.security.SecurityException;
 import org.opensaml.xml.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -106,6 +108,20 @@ public class SAMLConfig {
         bindings.add(httpPAOS11Binding(parserPool));
         return new ConfigurableSAMLProcessor(bindings, spConfiguration);
     }
+    
+    @Autowired
+    @Bean
+    public SAMLProcessor sloProcessor(VelocityEngine velocityEngine,
+                                      ParserPool parserPool,
+                                      SpConfiguration spConfiguration,
+                                      @Value("${sp.compare_endpoints}") boolean compareEndpoints) {
+        Collection<SAMLBinding> bindings = new ArrayList<>();
+        bindings.add(httpRedirectDeflateBinding(parserPool));
+        bindings.add(httpPostBinding(parserPool, velocityEngine, compareEndpoints));
+        bindings.add(httpSOAP11Binding(parserPool));
+        bindings.add(httpPAOS11Binding(parserPool));
+        return new SloSAMLProcessor(bindings, spConfiguration);
+    }
 
     @Bean
     public static SAMLBootstrap sAMLBootstrap() {
@@ -123,7 +139,7 @@ public class SAMLConfig {
                 new WebSSOProfileConsumerImpl() {
                     @Override
                     @SuppressWarnings("unchecked")
-                    protected void verifyAssertion(Assertion assertion, AuthnRequest request, SAMLMessageContext context) throws AuthenticationException, SAMLException, org.opensaml.xml.security.SecurityException, ValidationException, DecryptionException {
+                    protected void verifyAssertion(Assertion assertion, AuthnRequest request, SAMLMessageContext context) throws AuthenticationException, SAMLException, SecurityException, ValidationException, DecryptionException {
                         //nope
                         context.setSubjectNameIdentifier(assertion.getSubject().getNameID());
                     }
@@ -139,10 +155,18 @@ public class SAMLConfig {
 
     @Bean
     @Autowired
-    public WebSSOProfile webSSOprofile(SAMLProcessor samlProcessor) {
+    public WebSSOProfile webSSOprofile(@Qualifier("processor") SAMLProcessor samlProcessor) {
         WebSSOProfileImpl webSSOProfile = new WebSSOProfileImpl();
         webSSOProfile.setProcessor(samlProcessor);
         return webSSOProfile;
+    }
+    
+    @Bean
+    @Autowired
+    public SingleLogoutProfile singleLogoutProfile(@Qualifier("sloProcessor") SAMLProcessor samlProcessor) {
+        SingleLogoutProfileImpl spSingleLogoutProfile = new SingleLogoutProfileImpl();
+        spSingleLogoutProfile.setProcessor(samlProcessor);
+        return spSingleLogoutProfile;
     }
 
     @Bean

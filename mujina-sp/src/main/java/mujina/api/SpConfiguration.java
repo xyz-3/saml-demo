@@ -16,11 +16,15 @@ public class SpConfiguration extends SharedConfiguration {
 
     private String defaultIdpSSOServiceURL;
     private String idpSSOServiceURL;
+    private String defaultIdpSLOServiceURL;
+    private String idpSLOServiceURL;
     private String defaultProtocolBinding;
     private String protocolBinding;
     private String defaultAssertionConsumerServiceURL;
+    private String defaultSingleLogoutServiceURL;
     private boolean defaultNeedsSigning;
     private String assertionConsumerServiceURL;
+    private String singleLogoutServiceURL;
     private String spPrivateKey;
     private String spCertificate;
 
@@ -29,7 +33,9 @@ public class SpConfiguration extends SharedConfiguration {
                            @Value("${sp.base_url}") String spBaseUrl,
                            @Value("${sp.entity_id}") String defaultEntityId,
                            @Value("${sp.single_sign_on_service_location}") String defaultIdpSSOServiceURL,
+                           @Value("${sp.single_logout_service_location}") String defaultIdpSLOServiceURL,
                            @Value("${sp.acs_location_path}") String defaultAssertionConsumerServiceURLPath,
+                           @Value("${sp.slo_location_path}") String defaultSingleLogoutServiceURLPath,
                            @Value("${sp.protocol_binding}") String defaultProtocolBinding,
                            @Value("${sp.private_key}") String spPrivateKey,
                            @Value("${sp.certificate}") String spCertificate,
@@ -37,11 +43,13 @@ public class SpConfiguration extends SharedConfiguration {
         super(keyManager);
         this.setDefaultEntityId(defaultEntityId);
         this.setDefaultIdpSSOServiceURL(defaultIdpSSOServiceURL);
+        this.setDefaultIdpSLOServiceURL(defaultIdpSLOServiceURL);
         this.setDefaultAssertionConsumerServiceURL(spBaseUrl + defaultAssertionConsumerServiceURLPath);
         this.setDefaultProtocolBinding(defaultProtocolBinding);
         this.setSpPrivateKey(spPrivateKey);
         this.setSpCertificate(spCertificate);
         this.setDefaultNeedsSigning(needsSigning);
+        this.setDefaultSingleLogoutServiceURL(spBaseUrl + defaultSingleLogoutServiceURLPath);
         reset();
     }
 
@@ -51,8 +59,10 @@ public class SpConfiguration extends SharedConfiguration {
         setNeedsSigning(defaultNeedsSigning);
         resetKeyStore(defaultEntityId, spPrivateKey, spCertificate);
         setIdpSSOServiceURL(defaultIdpSSOServiceURL);
+        setIdpSLOServiceURL(defaultIdpSLOServiceURL);
         setProtocolBinding(defaultProtocolBinding);
         setAssertionConsumerServiceURL(defaultAssertionConsumerServiceURL);
+        setSingleLogoutServiceURL(defaultSingleLogoutServiceURL);
         setSignatureAlgorithm(getDefaultSignatureAlgorithm());
     }
 
