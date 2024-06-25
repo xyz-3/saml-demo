@@ -34,7 +34,7 @@ sp:
   # SingleLogoutServiceLocation
   single_logout_service_location: http://localhost:8081/SingleLogoutService
   # SLO location
-  slo_location_path: /saml/SingleLogout
+  slo_location_path: /saml/SLS
   # Protocol binding
   protocol_binding: urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST
   # Do we sign the authnRequest

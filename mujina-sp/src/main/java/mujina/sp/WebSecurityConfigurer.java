@@ -3,8 +3,6 @@ package mujina.sp;
 import mujina.saml.KeyStoreLocator;
 import mujina.saml.ProxiedSAMLContextProviderLB;
 import org.apache.velocity.app.VelocityEngine;
-import org.opensaml.saml2.core.LogoutRequest;
-import org.opensaml.saml2.core.NameID;
 import org.opensaml.saml2.metadata.provider.MetadataProvider;
 import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.opensaml.xml.parse.ParserPool;
@@ -30,6 +28,7 @@ import org.springframework.security.saml.metadata.*;
 import org.springframework.security.saml.parser.ParserPoolHolder;
 import org.springframework.security.saml.util.VelocityFactory;
 import org.springframework.security.saml.websso.SingleLogoutProfile;
+import org.springframework.security.saml.websso.SingleLogoutProfileImpl;
 import org.springframework.security.saml.websso.WebSSOProfileOptions;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.FilterChainProxy;
@@ -114,6 +113,11 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
+    public SingleLogoutProfile logoutProfile(){
+        return new SingleLogoutProfileImpl();
+    }
+
+    @Bean
     public ServletContextInitializer servletContextInitializer() {
         //otherwise the two localhost instances override each other session
         return servletContext -> {
@@ -135,19 +139,17 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                     .antMatchers("/", "/metadata", "/favicon.ico", "/*.css", "/sp.js", "/api/**",
                             assertionConsumerServiceURLPath + "/**", singleLogoutServiceURLPath + "/**").permitAll()
-                    .anyRequest().hasRole("USER")
+                    .anyRequest().authenticated()
                 .and()
-                .httpBasic().authenticationEntryPoint(samlEntryPoint())
+                .httpBasic()
+                    .authenticationEntryPoint(samlEntryPoint())
                 .and()
                 .csrf().disable()
                 .addFilterBefore(metadataGeneratorFilter(), ChannelProcessingFilter.class)
-//                .addFilterBefore(samlLogoutProcessingFilter(), LogoutFilter.class)
-                .addFilterAfter(samlFilter(), BasicAuthenticationFilter.class);
-        http.saml2Logout((saml2) -> saml2.logoutRequest((request) -> request.logoutRequestResolver((request1, response, authentication) -> {
-            LogoutRequest logoutRequest = request1.buildLogoutRequest();
-            NameID nameID = (NameID) logoutRequest.getNameID();
-            return logoutRequest;
-        })));
+                .addFilterAfter(samlFilter(), BasicAuthenticationFilter.class)
+                .logout()
+                    .logoutUrl("/logout")
+                    .addLogoutHandler(samlLogoutHandler());
     }
 
     // Handler deciding where to redirect user after successful login
@@ -193,13 +195,15 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Bean
     public SAMLLogoutProcessingFilter samlLogoutProcessingFilter() {
         SAMLLogoutProcessingFilter samlLogoutProcessingFilter = new SAMLLogoutProcessingFilter(successLogoutHandler(), samlLogoutHandler());
-        samlLogoutProcessingFilter.setFilterProcessesUrl("/saml/SingleLogout");
+        samlLogoutProcessingFilter.setFilterProcessesUrl("/saml/SLS");
         return samlLogoutProcessingFilter;
     }
 
     @Bean
     public SAMLLogoutFilter samlLogoutFilter() {
-        return new SAMLLogoutFilter(successLogoutHandler(), new LogoutHandler[] {samlLogoutHandler()}, new LogoutHandler[] { samlLogoutHandler() });
+        return new SAMLLogoutFilter(successLogoutHandler(),
+                new LogoutHandler[] {samlLogoutHandler()},
+                new LogoutHandler[] { samlLogoutHandler() });
     }
 
     @Bean
@@ -226,8 +230,8 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     public FilterChainProxy samlFilter() throws Exception {
         List<SecurityFilterChain> chains = new ArrayList<>();
         chains.add(chain("/login/**", samlEntryPoint()));
+        chains.add(chain("/logout/**", samlLogoutFilter()));
         chains.add(chain("/metadata/**", metadataDisplayFilter()));
-        chains.add(chain("/logout/**", samlLogoutProcessingFilter()));
         chains.add(chain(assertionConsumerServiceURLPath + "/**", samlWebSSOProcessingFilter()));
         chains.add(chain(singleLogoutServiceURLPath + "/**", samlLogoutProcessingFilter()));
         return new FilterChainProxy(chains);

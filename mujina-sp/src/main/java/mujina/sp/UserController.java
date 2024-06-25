@@ -64,9 +64,4 @@ public class UserController {
             return "redirect:/home";
         }
     }
-
-    @GetMapping("/logout")
-    public String logout(Authentication authentication) {
-        return "redirect:/";
-    }
 }

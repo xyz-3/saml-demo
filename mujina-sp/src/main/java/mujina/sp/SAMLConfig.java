@@ -109,19 +109,19 @@ public class SAMLConfig {
         return new ConfigurableSAMLProcessor(bindings, spConfiguration);
     }
     
-    @Autowired
-    @Bean
-    public SAMLProcessor sloProcessor(VelocityEngine velocityEngine,
-                                      ParserPool parserPool,
-                                      SpConfiguration spConfiguration,
-                                      @Value("${sp.compare_endpoints}") boolean compareEndpoints) {
-        Collection<SAMLBinding> bindings = new ArrayList<>();
-        bindings.add(httpRedirectDeflateBinding(parserPool));
-        bindings.add(httpPostBinding(parserPool, velocityEngine, compareEndpoints));
-        bindings.add(httpSOAP11Binding(parserPool));
-        bindings.add(httpPAOS11Binding(parserPool));
-        return new SloSAMLProcessor(bindings, spConfiguration);
-    }
+//    @Autowired
+//    @Bean
+//    public SAMLProcessor sloProcessor(VelocityEngine velocityEngine,
+//                                      ParserPool parserPool,
+//                                      SpConfiguration spConfiguration,
+//                                      @Value("${sp.compare_endpoints}") boolean compareEndpoints) {
+//        Collection<SAMLBinding> bindings = new ArrayList<>();
+//        bindings.add(httpRedirectDeflateBinding(parserPool));
+//        bindings.add(httpPostBinding(parserPool, velocityEngine, compareEndpoints));
+//        bindings.add(httpSOAP11Binding(parserPool));
+//        bindings.add(httpPAOS11Binding(parserPool));
+//        return new SloSAMLProcessor(bindings, spConfiguration);
+//    }
 
     @Bean
     public static SAMLBootstrap sAMLBootstrap() {
@@ -155,18 +155,10 @@ public class SAMLConfig {
 
     @Bean
     @Autowired
-    public WebSSOProfile webSSOprofile(@Qualifier("processor") SAMLProcessor samlProcessor) {
+    public WebSSOProfile webSSOprofile(SAMLProcessor samlProcessor) {
         WebSSOProfileImpl webSSOProfile = new WebSSOProfileImpl();
         webSSOProfile.setProcessor(samlProcessor);
         return webSSOProfile;
-    }
-    
-    @Bean
-    @Autowired
-    public SingleLogoutProfile singleLogoutProfile(@Qualifier("sloProcessor") SAMLProcessor samlProcessor) {
-        SingleLogoutProfileImpl spSingleLogoutProfile = new SingleLogoutProfileImpl();
-        spSingleLogoutProfile.setProcessor(samlProcessor);
-        return spSingleLogoutProfile;
     }
 
     @Bean
