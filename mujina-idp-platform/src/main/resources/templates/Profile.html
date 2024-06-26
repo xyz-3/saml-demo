@@ -14,6 +14,10 @@
             <li>Name</li>
             <li th:text="${user.name}"></li>
         </ul>
+        <ul>
+            <li>Email</li>
+            <li th:text="${user.email}"></li>
+        </ul>
         <ul th:each="authority : ${user.authorities}">
             <li>Authority</li>
             <li th:text="${authority}"></li>

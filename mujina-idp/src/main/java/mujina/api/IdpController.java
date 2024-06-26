@@ -1,6 +1,5 @@
 package mujina.api;
 
-import mujina.Entity.User;
 import mujina.dto.UserDto;
 import mujina.idp.FederatedUserAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;

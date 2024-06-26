@@ -43,6 +43,9 @@ public class UserController {
     @GetMapping({"platform", "/platform.html"})
     public String platform(ModelMap modelMap){
         List<UserDto> users = userDao.getAllUsers();
+        // filter admin out of users
+        UserDto admin = users.stream().filter(user -> user.getAuthorities().contains("ROLE_ADMIN")).findFirst().orElse(null);
+        users.remove(admin);
         modelMap.addAttribute("users", users);
         return "platform";
     }
@@ -61,6 +64,8 @@ public class UserController {
     public String modifyUserAuthorities(@RequestParam Map<String, String> allParams, RedirectAttributes redirectAttributes) {
         List<UserDto> users = userDao.getAllUsers();
         UserDto admin = users.stream().filter(user -> user.getAuthorities().contains("ROLE_ADMIN")).findFirst().orElse(null);
+        // filter admin out of users
+        users.remove(admin);
         for (UserDto user : users) {
             if(user.equals(admin)){
                 continue;
