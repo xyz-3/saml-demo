@@ -2,11 +2,16 @@ package org.data.mujinaidpplatform.dao;
 
 
 import org.data.mujinaidpplatform.Entity.User;
+import org.data.mujinaidpplatform.dto.UserDto;
 
 import java.util.List;
 
 public interface UserDao {
-    User getUser(String name, String password);
+    UserDto getUser(String name, String password);
 
-    List<User> getAllUsers();
+    List<UserDto> getAllUsers();
+
+    void addAuthority(Integer id, String authority);
+
+    void removeAuthority(Integer id, String authority);
 }

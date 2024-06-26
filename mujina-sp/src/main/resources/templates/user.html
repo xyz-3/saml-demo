@@ -22,8 +22,8 @@
 <!--            </ul>-->
             <!-- Conditional buttons based on user roles -->
             <div>
-                <a class="button" th:if="${authorities.?[authority == 'AUTH_PAGE1'].size() > 0}" th:href="@{/page1.html}">Page1</a>
-                <a class="button" th:if="${authorities.?[authority == 'AUTH_PAGE2'].size() > 0}" th:href="@{/page2.html}">Page2</a>
+                <a class="button" th:if="${authorities.?[authority == 'ROLE_SVIP'].size() > 0}" th:href="@{/page1.html}">See SVIP page</a>
+                <a class="button" th:if="${authorities.?[authority == 'ROLE_VIP'].size() > 0}" th:href="@{/page2.html}">See VIP page.</a>
             </div>
         </section>
         <a class="powered-by" href="https://openconext.org/" target="_blank">Copyright © 2018 OpenConext</a>

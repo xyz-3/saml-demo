@@ -1,12 +1,14 @@
 package org.data.mujinaidpplatform.dao;
 
 import org.data.mujinaidpplatform.Entity.User;
+import org.data.mujinaidpplatform.dto.UserDto;
 import org.data.mujinaidpplatform.repository.UserAuthoritiesRepository;
 import org.data.mujinaidpplatform.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,22 +19,42 @@ public class UserDaoImpl implements UserDao{
     @Autowired
     private UserAuthoritiesRepository userAuthoritiesRepository;
     @Override
-    public User getUser(String name, String password) {
+    public UserDto getUser(String name, String password) {
         Optional<User> user = userRepository.findByNameAndPassword(name, password);
         if(!user.isPresent()){
             return null;
         }
         List<String> authorities = userAuthoritiesRepository.findAllAuthoritiesByUserId(user.get().getId());
-        user.get().setAuthorities(authorities);
-        return user.get();
+        UserDto userDto = new UserDto(user.get(), authorities);
+        return userDto;
     }
     @Override
-    public List<User> getAllUsers() {
+    public List<UserDto> getAllUsers() {
         List<User> users = userRepository.findAll();
+        List<UserDto> userDtos = new ArrayList<>();
         for(User user : users){
             List<String> authorities = userAuthoritiesRepository.findAllAuthoritiesByUserId(user.getId());
-            user.setAuthorities(authorities);
+            UserDto userDto = new UserDto(user, authorities);
+            userDtos.add(userDto);
         }
-        return users;
+        return userDtos;
+    }
+
+    @Override
+    public void addAuthority(Integer id, String authority) {
+        Optional<User> user = userRepository.findById(id);
+        if(!user.isPresent()){
+            return;
+        }
+        userAuthoritiesRepository.addAuthority(user.get().getId(), authority);
+    }
+
+    @Override
+    public void removeAuthority(Integer id, String authority) {
+        Optional<User> user = userRepository.findById(id);
+        if(!user.isPresent()){
+            return;
+        }
+        userAuthoritiesRepository.removeAuthority(user.get().getId(), authority);
     }
 }

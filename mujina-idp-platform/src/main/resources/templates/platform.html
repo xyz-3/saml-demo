@@ -19,24 +19,35 @@
             <li th:text="${authority}"></li>
         </ul>
         <h2>All Users</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>Username</th>
-                <th>Authorities</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="user : ${users}">
-                <td th:text="${user.name}"></td>
-                <td>
-                    <ul>
-                        <li th:each="authority : ${user.authorities}" th:text="${authority}"></li>
-                    </ul>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+        <form action="#" th:action="@{/modifyAuthorities}" method="post">
+            <table>
+                <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Authorities</th>
+                    <th>Add Authorities</th>
+                    <th>Delete Authorities</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.name}"></td>
+                    <td>
+                        <ul>
+                            <li th:each="authority : ${user.authorities}" th:text="${authority}"></li>
+                        </ul>
+                    </td>
+                    <td>
+                        <input type="text" th:name="'addAuthority_' + ${user.name}"/>
+                    </td>
+                    <td>
+                        <input type="text" th:name="'delAuthority_' + ${user.name}"/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <button type="submit" class="confirm-button">Confirm Changes</button>
+        </form>
         <section class="powered-by">
             <a href="https://openconext.org/" target="_blank" rel="noreferrer noopener">Copyright © 2018 OpenConext</a>
         </section>
