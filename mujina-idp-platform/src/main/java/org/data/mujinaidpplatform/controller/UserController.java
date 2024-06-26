@@ -31,7 +31,11 @@ public class UserController {
         User user = userDao.getUser(username, password);
         if(user != null){
             redirectAttributes.addFlashAttribute(user);
-            return "redirect:/platform.html";
+            if (user.getAuthorities().contains("ROLE_ADMIN")) {
+                return "redirect:/platform.html";
+            }else{
+                return "redirect:/Profile.html";
+            }
         }
         return "index";
     }
@@ -41,5 +45,10 @@ public class UserController {
         List<User> users = userDao.getAllUsers();
         modelMap.addAttribute("users", users);
         return "platform";
+    }
+
+    @GetMapping({"profile", "/Profile.html"})
+    public String profile(ModelMap modelMap){
+        return "profile";
     }
 }
