@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/main.css"/>
+    <script th:src="@{/main.js}"></script>
+</head>
+<body>
+<main class="login-container">
+    <div class="login">
+        <h1>Mujina Identity Provider</h1>
+        <p th:if="${param.error}" class="error">Wrong user or password</p>
+        <form class="login-form" th:action="@{/login}" method="post">
+            <label for="username" class="sr-only">Username</label>
+            <input type="text" id="username" name="username" autofocus="autofocus" placeholder="Username"/>
+            <label for="password" class="sr-only">Password</label>
+            <input type="password" id="password" name="password" placeholder="Password"/>
+            <input class="button" type="submit" value="Log in"/>
+            <div>
+                <input id="persist-me" name="persist-me" type="checkbox"/>
+                <label class="persist-me" for="persist-me">Persist me?</label>
+            </div>
+            <section class="powered-by">
+                <a href="https://openconext.org/" target="_blank" rel="noreferrer noopener">Copyright © 2018 OpenConext</a>
+            </section>
+        </form>
+    </div>
+</main>
+</body>
+</html>
