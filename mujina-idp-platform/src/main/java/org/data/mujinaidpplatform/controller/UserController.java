@@ -51,4 +51,9 @@ public class UserController {
     public String profile(ModelMap modelMap){
         return "profile";
     }
+
+    @GetMapping("/logout")
+    public String logout(){
+        return "index";
+    }
 }
