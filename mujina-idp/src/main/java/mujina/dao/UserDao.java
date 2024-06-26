@@ -1,9 +1,7 @@
 package mujina.dao;
 
-import mujina.Entity.User;
-
-import java.util.List;
+import mujina.dto.UserDto;
 
 public interface UserDao {
-    User getUser(String name, String password);
+    UserDto getUser(String name, String password);
 }

@@ -1,6 +1,7 @@
 package mujina.dao;
 
 import mujina.Entity.User;
+import mujina.dto.UserDto;
 import mujina.repository.UserAuthoritiesRepository;
 import mujina.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +17,12 @@ public class UserDaoImpl implements UserDao{
     @Autowired
     private UserAuthoritiesRepository userAuthoritiesRepository;
     @Override
-    public User getUser(String name, String password) {
+    public UserDto getUser(String name, String password) {
         Optional<User> user = userRepository.findByNameAndPassword(name, password);
-        if(!user.isPresent()){
+        if(user.isEmpty()){
             return null;
         }
         List<String> authorities = userAuthoritiesRepository.findAllAuthoritiesByUserId(user.get().getId());
-        user.get().setAuthorities(authorities);
-        return user.get();
+        return new UserDto(user.get(), authorities);
     }
 }

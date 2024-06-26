@@ -3,6 +3,7 @@ package mujina.idp;
 import mujina.api.IdpConfiguration;
 import mujina.Entity.User;
 import mujina.dao.UserDao;
+import mujina.dto.UserDto;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -39,7 +40,7 @@ public class AuthenticationProvider implements org.springframework.security.auth
                     authentication.getCredentials(),
                     Arrays.asList(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER")));
         } else {
-            User user = userDao.getUser(authentication.getPrincipal().toString(), authentication.getCredentials().toString());
+            UserDto user = userDao.getUser(authentication.getPrincipal().toString(), authentication.getCredentials().toString());
             if (user == null) {
                 throw new InvalidAuthenticationException("User not found or bad credentials");
             }

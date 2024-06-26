@@ -1,6 +1,7 @@
 package mujina.api;
 
 import mujina.Entity.User;
+import mujina.dto.UserDto;
 import mujina.idp.FederatedUserAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -62,7 +63,7 @@ public class IdpController extends SharedController {
     }
 
     @PutMapping("/users")
-    public void addUser(@RequestBody User user) {
+    public void addUser(@RequestBody UserDto user) {
         LOG.info("Request to add user {}", user);
         FederatedUserAuthenticationToken userAuthenticationToken = new FederatedUserAuthenticationToken(
                 user.getName(),

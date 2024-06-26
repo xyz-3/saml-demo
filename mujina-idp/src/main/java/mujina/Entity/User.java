@@ -24,12 +24,8 @@ public class User implements Serializable {
     @Column(name = "password")
     private String password;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> authorities;
-
-    public User(String name, String password, List<String> authorities) {
+    public User(String name, String password) {
         this.name = name;
         this.password = password;
-        this.authorities = authorities;
     }
 }

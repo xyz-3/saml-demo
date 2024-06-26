@@ -134,6 +134,9 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(metadataGeneratorFilter(), ChannelProcessingFilter.class)
                 .addFilterAfter(samlFilter(), BasicAuthenticationFilter.class)
                 .logout()
+                .clearAuthentication(true)
+                .deleteCookies("mujinaSpSessionId")
+                .invalidateHttpSession(true)
                 .logoutSuccessUrl("/");
     }
 
