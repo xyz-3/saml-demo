@@ -22,10 +22,17 @@ public class UserDaoImpl implements UserDao{
         if(!user.isPresent()){
             return null;
         }
-        System.out.println("Get User.");
         List<String> authorities = userAuthoritiesRepository.findAllAuthoritiesByUserId(user.get().getId());
         user.get().setAuthorities(authorities);
-        System.out.println("Get Authorities.");
         return user.get();
+    }
+    @Override
+    public List<User> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        for(User user : users){
+            List<String> authorities = userAuthoritiesRepository.findAllAuthoritiesByUserId(user.getId());
+            user.setAuthorities(authorities);
+        }
+        return users;
     }
 }

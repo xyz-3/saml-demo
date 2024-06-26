@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.data.mujinaidpplatform.Entity.User;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.List;
+
 @Controller
 public class UserController {
     @Autowired
@@ -35,7 +37,9 @@ public class UserController {
     }
 
     @GetMapping({"platform", "/platform.html"})
-    public String platform(){
+    public String platform(ModelMap modelMap){
+        List<User> users = userDao.getAllUsers();
+        modelMap.addAttribute("users", users);
         return "platform";
     }
 }

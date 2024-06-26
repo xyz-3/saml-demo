@@ -18,6 +18,25 @@
             <li>Authority</li>
             <li th:text="${authority}"></li>
         </ul>
+        <h2>All Users</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Username</th>
+                <th>Authorities</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user : ${users}">
+                <td th:text="${user.name}"></td>
+                <td>
+                    <ul>
+                        <li th:each="authority : ${user.authorities}" th:text="${authority}"></li>
+                    </ul>
+                </td>
+            </tr>
+            </tbody>
+        </table>
         <section class="powered-by">
             <a href="https://openconext.org/" target="_blank" rel="noreferrer noopener">Copyright © 2018 OpenConext</a>
         </section>
