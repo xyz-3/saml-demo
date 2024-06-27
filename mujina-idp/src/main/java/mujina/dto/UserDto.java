@@ -29,7 +29,7 @@ public class UserDto {
         this.name = user.getName();
         this.email = user.getEmail();
         this.password = user.getPassword();
-        this.mfaEnabled = user.getMfaEnabled();
+        this.mfaEnabled = user.getMfa_enabled();
         this.authorities = authorities;
     }
 }

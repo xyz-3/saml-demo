@@ -1,5 +1,6 @@
 package mujina.idp;
 
+import com.warrenstrange.googleauth.GoogleAuthenticator;
 import mujina.api.IdpConfiguration;
 import mujina.dao.UserDao;
 import mujina.saml.KeyStoreLocator;
@@ -122,6 +123,9 @@ public class WebSecurityConfigurer implements WebMvcConfigurer {
         @Autowired
         private UserDao userDao;
 
+        @Autowired
+        private GoogleAuthenticator gAuth;
+
         private SAMLAttributeAuthenticationFilter authenticationFilter() throws Exception {
             SAMLAttributeAuthenticationFilter filter = new SAMLAttributeAuthenticationFilter();
             filter.setAuthenticationManager(authenticationManagerBean());
@@ -158,7 +162,7 @@ public class WebSecurityConfigurer implements WebMvcConfigurer {
 
         @Override
         public void configure(AuthenticationManagerBuilder auth) {
-            auth.authenticationProvider(new AuthenticationProvider(userDao, idpConfiguration));
+            auth.authenticationProvider(new AuthenticationProvider(userDao, idpConfiguration, gAuth));
         }
 
         @Bean
