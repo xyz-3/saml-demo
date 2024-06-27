@@ -130,7 +130,6 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .and()
                 .httpBasic().authenticationEntryPoint(samlEntryPoint())
                 .and()
-                .csrf().disable()
                 .addFilterBefore(metadataGeneratorFilter(), ChannelProcessingFilter.class)
                 .addFilterAfter(samlFilter(), BasicAuthenticationFilter.class)
                 .logout()

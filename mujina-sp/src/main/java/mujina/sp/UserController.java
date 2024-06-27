@@ -1,11 +1,18 @@
 package mujina.sp;
 
+import mujina.Response.RedirectResponse;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Controller;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-@Controller
+import java.util.List;
+import java.util.stream.Collectors;
+
+@RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     /*
@@ -13,16 +20,27 @@ public class UserController {
     否则，就回到登录界面
      */
     @GetMapping("/")
-    public String index(Authentication authentication) {
-        return authentication == null ? "index" : "redirect:/home";
+    public RedirectResponse index(Authentication authentication) {
+        if (authentication != null) {
+            // check if user is admin
+            List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+            if (roles.contains("ROLE_ADMIN")) {
+                return new RedirectResponse("/admin", "success", roles);
+            } else {
+                return new RedirectResponse("/user", "success", roles);
+            }
+        }else{
+            return new RedirectResponse("/", "success", null);
+        }
     }
 
     @GetMapping("/home")
-    public String home(Authentication authentication) {
-        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
-            return "redirect:/admin.html";
+    public RedirectResponse home(Authentication authentication) {
+        List<String> roles = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList());
+        if (roles.contains("ROLE_ADMIN")) {
+            return new RedirectResponse("/admin", "success", roles);
         } else {
-            return "redirect:/user.html";
+            return new RedirectResponse("/user", "success", roles);
         }
     }
 

@@ -4,6 +4,8 @@ package org.data.mujinaidpplatform.controller;
 import org.data.mujinaidpplatform.dao.UserDao;
 import org.data.mujinaidpplatform.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,6 +44,10 @@ public class UserController {
 
     @GetMapping({"platform", "/platform.html"})
     public String platform(ModelMap modelMap){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if(authentication == null){
+            return "/";
+        }
         List<UserDto> users = userDao.getAllUsers();
         // filter admin out of users
         UserDto admin = users.stream().filter(user -> user.getAuthorities().contains("ROLE_ADMIN")).findFirst().orElse(null);

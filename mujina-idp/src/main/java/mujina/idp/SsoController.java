@@ -19,8 +19,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -32,7 +34,8 @@ import java.util.stream.Collectors;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
-@Controller
+@RestController
+@CrossOrigin("http://localhost:3000")
 public class SsoController {
 
     @Autowired

@@ -138,7 +138,6 @@ public class WebSecurityConfigurer implements WebMvcConfigurer {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http
-                    .csrf().disable()
                     .addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class)
                     .addFilterBefore(new ForceAuthnFilter(samlMessageHandler), SAMLAttributeAuthenticationFilter.class)
                     .authorizeRequests()
