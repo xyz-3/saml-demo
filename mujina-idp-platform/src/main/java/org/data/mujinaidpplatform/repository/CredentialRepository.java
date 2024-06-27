@@ -38,6 +38,7 @@ public class CredentialRepository implements ICredentialRepository {
 //        usersKeys.put(userName, new UserTOTP(userName, secretKey, validationCode, scratchCodes));
         Integer userid = userRepository.findIdByName(userName);
         userGauthRepository.insertUserGauth(userName, userid, secretKey);
+        userRepository.updateMfaEnabledById(userid, true);
     }
 
     public UserTOTP getUser(String username) {

@@ -41,11 +41,7 @@ public class GAController {
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         MatrixToImageWriter.writeToStream(bitMatrix, "PNG", outputStream);
-
         String base64 = new String(Base64.getEncoder().encode(outputStream.toByteArray()));
-//        String innerData = "<td align='center' style='width:240px;height:240px'>"+
-//                "<img alt='Embedded Image' src='data:image/png;base64,'" + base64 + "' /></td>";
-
         outputStream.close();
 
         redirectAttributes.addFlashAttribute("qrcodebase64", base64);

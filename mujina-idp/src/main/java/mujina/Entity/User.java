@@ -27,9 +27,13 @@ public class User implements Serializable {
     @Column(name = "email")
     private String email;
 
-    public User(String name, String password, String email) {
+    @Column(name = "mfa_enabled")
+    private Boolean mfa_enabled;
+
+    public User(String name, String password, String email, Boolean mfaEnabled) {
         this.name = name;
         this.password = password;
         this.email = email;
+        this.mfa_enabled = mfaEnabled;
     }
 }
