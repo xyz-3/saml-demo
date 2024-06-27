@@ -1,0 +1,18 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>QRCode</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/main.css"/>
+</head>
+<section class="user-container">
+    <section class="attributes">
+        <h1>Get QRCode</h1>
+        <td align='center' style='width:200px;height:200px'>
+            <img alt='Embedded Image' th:src="'data:image/png;base64,' + ${qrcodebase64}" />
+        </td>
+        <section class="powered-by">
+            <a href="https://openconext.org/" target="_blank" rel="noreferrer noopener">Copyright © 2018 OpenConext</a>
+        </section>
+    </section>
+</section>
+</html>
