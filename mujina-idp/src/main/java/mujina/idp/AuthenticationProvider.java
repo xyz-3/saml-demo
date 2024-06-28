@@ -48,22 +48,23 @@ public class AuthenticationProvider implements org.springframework.security.auth
             if (user == null) {
                 throw new InvalidAuthenticationException("User not found or bad credentials");
             }
-            // 2FA Google Authenticator Code认证
-            Object details = authentication.getDetails();
-            if (details instanceof HashMap) {
-                HashMap<String, Object> detailsMap = (HashMap<String, Object>) details;
-                Object code = detailsMap.get("totpcode");
-                boolean res = false;
-                if(code instanceof String[]){
-                    String[] code_after = (String[]) code;
-                    String totpcode = code_after[0];
-                    res = gAuth.authorizeUser(user.getName(), Integer.parseInt(totpcode));
-                }
-                if (!res) {
-                    throw new InvalidAuthenticationException("Google Authenticator Code is invalid");
+            if (user.getMfaEnabled()){
+                // 2FA Google Authenticator Code认证
+                Object details = authentication.getDetails();
+                if (details instanceof HashMap) {
+                    HashMap<String, Object> detailsMap = (HashMap<String, Object>) details;
+                    Object code = detailsMap.get("totpcode");
+                    boolean res = false;
+                    if(code instanceof String[]){
+                        String[] code_after = (String[]) code;
+                        String totpcode = code_after[0];
+                        res = gAuth.authorizeUser(user.getName(), Integer.parseInt(totpcode));
+                    }
+                    if (!res) {
+                        throw new InvalidAuthenticationException("Google Authenticator Code is invalid");
+                    }
                 }
             }
-
             List<GrantedAuthority> authorities = user.getAuthorities()
                     .stream()
                     .map(SimpleGrantedAuthority::new)

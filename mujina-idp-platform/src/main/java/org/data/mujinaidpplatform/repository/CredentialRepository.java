@@ -4,12 +4,14 @@ import com.warrenstrange.googleauth.ICredentialRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.data.mujinaidpplatform.Entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 public class CredentialRepository implements ICredentialRepository {
@@ -35,8 +37,12 @@ public class CredentialRepository implements ICredentialRepository {
                                     String secretKey,
                                     int validationCode,
                                     List<Integer> scratchCodes) {
-//        usersKeys.put(userName, new UserTOTP(userName, secretKey, validationCode, scratchCodes));
-        Integer userid = userRepository.findIdByName(userName);
+        Optional<User> user = userRepository.findByName(userName);
+        if (!user.isPresent()) {
+            return;
+        }
+        if (user.get().getMfa_enabled()) return;
+        Integer userid = user.get().getId();
         userGauthRepository.insertUserGauth(userName, userid, secretKey);
         userRepository.updateMfaEnabledById(userid, true);
     }

@@ -135,7 +135,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .addFilterAfter(samlFilter(), BasicAuthenticationFilter.class)
                 .logout()
                 .clearAuthentication(true)
-                .deleteCookies("mujinaSpSessionId")
+                .deleteCookies("mujinaSpSessionId", "mujinaIdpSessionId")
                 .invalidateHttpSession(true)
                 .logoutSuccessUrl("/");
     }
