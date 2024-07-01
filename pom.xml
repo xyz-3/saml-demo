@@ -38,6 +38,7 @@
     <module>mujina-common</module>
     <module>mujina-sp</module>
     <module>mujina-idp</module>
+    <module>mujina-sp2</module>
   </modules>
 
   <repositories>
