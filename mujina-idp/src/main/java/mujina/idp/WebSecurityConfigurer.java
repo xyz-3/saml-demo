@@ -157,6 +157,7 @@ public class WebSecurityConfigurer implements WebMvcConfigurer {
                     .permitAll()
                     .and()
                     .logout()
+                    .deleteCookies("mujinaIdpSessionId", "mujinaSpSessionId")
                     .logoutSuccessUrl("/");
         }
 

@@ -225,6 +225,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Bean
     public FilterChainProxy samlFilter() throws Exception {
         List<SecurityFilterChain> chains = new ArrayList<>();
+        chains.add(chain("/logout", mujinaSamlLogoutFilter()));
         chains.add(chain("/login/**", samlEntryPoint()));
         chains.add(chain("/metadata/**", metadataDisplayFilter()));
         chains.add(chain(assertionConsumerServiceURLPath + "/**", samlWebSSOProcessingFilter()));

@@ -43,5 +43,7 @@
                             Location="http://localhost:8081/SingleSignOnService"/>
     <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
                             Location="http://localhost:8081/SingleLogoutService"/>
+    <md:SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+                            Location="http://localhost:8081/SingleLogoutService"/>
   </md:IDPSSODescriptor>
 </md:EntityDescriptor>

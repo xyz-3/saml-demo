@@ -25,6 +25,7 @@ public class ForceAuthnFilter extends OncePerRequestFilter {
         String servletPath = request.getServletPath();
         // 处理用户登录请求（已跳转idp域名）
         if (servletPath == null || !servletPath.endsWith("SingleSignOnService") ||
+                !servletPath.endsWith("SingleLogoutService") ||
                 request.getMethod().equalsIgnoreCase("GET")) {
             chain.doFilter(request, response);
             return;

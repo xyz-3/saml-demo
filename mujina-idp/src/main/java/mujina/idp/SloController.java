@@ -1,10 +1,14 @@
 package mujina.idp;
 
+
 import mujina.api.IdpConfiguration;
 import mujina.saml.SAMLAttribute;
 import mujina.saml.SAMLPrincipal;
 import org.opensaml.common.binding.SAMLMessageContext;
-import org.opensaml.saml2.core.*;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.opensaml.saml2.core.LogoutRequest;
+import org.opensaml.saml2.core.NameIDType;
+import org.opensaml.saml2.core.StatusCode;
 import org.opensaml.saml2.metadata.provider.MetadataProviderException;
 import org.opensaml.ws.message.decoder.MessageDecodingException;
 import org.opensaml.ws.message.encoder.MessageEncodingException;
@@ -14,8 +18,8 @@ import org.opensaml.xml.signature.SignatureException;
 import org.opensaml.xml.validation.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -25,6 +29,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,41 +38,34 @@ import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
 @Controller
-public class SsoController {
-
+public class SloController {
     @Autowired
     private SAMLMessageHandler samlMessageHandler;
 
     @Autowired
     private IdpConfiguration idpConfiguration;
 
-    @GetMapping("/SingleSignOnService")
-    public void singleSignOnServiceGet(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+    @GetMapping("/SingleLogoutService")
+    public void singleLogoutServiceGet(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException, MarshallingException, SignatureException, MessageEncodingException, ValidationException, SecurityException, MessageDecodingException, MetadataProviderException, ServletException {
-        doSSO(request, response, authentication, false);
+        doSLO(request, response, authentication, false);
     }
 
-    @PostMapping("/SingleSignOnService")
-    public void singleSignOnServicePost(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
+    @PostMapping("/SingleLogoutService")
+    public void singleLogoutServicePost(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException, MarshallingException, SignatureException, MessageEncodingException, ValidationException, SecurityException, MessageDecodingException, MetadataProviderException, ServletException {
-        doSSO(request, response, authentication, true);
+        doSLO(request, response, authentication, true);
     }
 
     @SuppressWarnings("unchecked")
-    private void doSSO(HttpServletRequest request, HttpServletResponse response, Authentication authentication, boolean postRequest)
-            throws ValidationException, SecurityException, MessageDecodingException, MarshallingException, SignatureException, MessageEncodingException, MetadataProviderException, IOException, ServletException {
+    private void doSLO(HttpServletRequest request, HttpServletResponse response, Authentication authentication, boolean postRequest) throws ValidationException, MessageDecodingException, SecurityException, MetadataProviderException, MessageEncodingException {
         SAMLMessageContext messageContext = samlMessageHandler.extractSAMLMessageContext(request, response, postRequest);
-        AuthnRequest authnRequest = (AuthnRequest) messageContext.getInboundSAMLMessage();
+        LogoutRequest logoutRequest = (LogoutRequest) messageContext.getInboundSAMLMessage();
 
-        String assertionConsumerServiceURL = idpConfiguration.getAcsEndpoint() != null ? idpConfiguration.getAcsEndpoint() : authnRequest.getAssertionConsumerServiceURL();
-        Map<String, String[]> parameterMap = (Map<String, String[]>) authentication.getDetails();
-        String[] authnContextClassRefs = parameterMap.get("authn-context-class-ref-value");
-
+        String destination = idpConfiguration.getSlsEndpoint();
+        // Build SAMLPrincipal
         List<SAMLAttribute> attributes = attributes(authentication);
-
-        String authnContextClassRefValue = authnContextClassRefs != null ? authnContextClassRefs[0] : AuthnContext.PASSWORD_AUTHN_CTX;
-
-        SAMLPrincipal principal = new SAMLPrincipal(
+        SAMLPrincipal samlPrincipal = new SAMLPrincipal(
                 authentication.getName(),
                 attributes.stream()
                         .filter(attr -> "urn:oasis:names:tc:SAML:1.1:nameid-format".equals(attr.getName()))
@@ -77,14 +75,25 @@ public class SsoController {
                         .map(GrantedAuthority::getAuthority)
                         .map(SimpleGrantedAuthority::new)
                         .collect(toList()),
-                authnRequest.getIssuer().getValue(),
-                authnRequest.getID(),
-                assertionConsumerServiceURL,
+                logoutRequest.getIssuer().getValue(),
+                logoutRequest.getID(),
                 "",
-                messageContext.getRelayState());
+                destination,
+                messageContext.getRelayState()
+        );
 
-//        samlMessageHandler.sendAuthnResponse(principal, authnContextClassRefValue, response);
-        samlMessageHandler.sendAuthnResponse(principal, response, authnContextClassRefValue);
+        if (!Objects.equals(authentication.getPrincipal(), logoutRequest.getNameID().getValue())) {
+            samlMessageHandler.sendLogoutResponse(samlPrincipal, StatusCode.NO_AUTHN_CONTEXT_URI, response);
+            return;
+        }
+
+        HttpSession session = request.getSession(false);
+        SecurityContextHolder.clearContext();
+        if (session != null) {
+            session.invalidate();
+        }
+
+        samlMessageHandler.sendLogoutResponse(samlPrincipal, StatusCode.SUCCESS_URI, response);
     }
 
     @SuppressWarnings("unchecked")
@@ -166,5 +175,4 @@ public class SsoController {
                         new SAMLAttribute(entry.getKey(), entry.getValue()))
                 .collect(toList());
     }
-
 }

@@ -11,15 +11,22 @@ import org.springframework.security.saml.context.SAMLMessageContext;
 import org.springframework.security.saml.processor.SAMLBinding;
 import org.springframework.security.saml.processor.SAMLProcessorImpl;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
 
 public class ConfigurableSAMLProcessor extends SAMLProcessorImpl {
 
     private final SpConfiguration spConfiguration;
+    private final HttpServletRequest request;
+    private final HttpServletResponse response;
 
-    public ConfigurableSAMLProcessor(Collection<SAMLBinding> bindings, SpConfiguration spConfiguration) {
+    public ConfigurableSAMLProcessor(Collection<SAMLBinding> bindings, SpConfiguration spConfiguration, HttpServletRequest request, HttpServletResponse response) {
         super(bindings);
         this.spConfiguration = spConfiguration;
+        this.request = request;
+        this.response = response;
     }
 
     @Override
@@ -38,6 +45,17 @@ public class ConfigurableSAMLProcessor extends SAMLProcessorImpl {
         AssertionConsumerService assertionConsumerService = roleDescriptor.getAssertionConsumerServices().stream().filter(service -> service.isDefault()).findAny().orElseThrow(() -> new RuntimeException("No default ACS"));
         assertionConsumerService.setBinding(spConfiguration.getProtocolBinding());
         assertionConsumerService.setLocation(spConfiguration.getAssertionConsumerServiceURL());
+
+        // Add the Cookie to the request
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("mujinaSpSessionId".equals(cookie.getName())) {
+                    response.addCookie(cookie);
+                    break;
+                }
+            }
+        }
 
         return super.sendMessage(samlContext, spConfiguration.isNeedsSigning(), binding);
 

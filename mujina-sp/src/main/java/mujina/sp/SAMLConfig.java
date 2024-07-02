@@ -26,6 +26,8 @@ import org.springframework.security.saml.log.SAMLDefaultLogger;
 import org.springframework.security.saml.processor.*;
 import org.springframework.security.saml.websso.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -96,7 +98,9 @@ public class SAMLConfig {
     public SAMLProcessor processor(VelocityEngine velocityEngine,
                                    ParserPool parserPool,
                                    SpConfiguration spConfiguration,
-                                   @Value("${sp.compare_endpoints}") boolean compareEndpoints) {
+                                   @Value("${sp.compare_endpoints}") boolean compareEndpoints,
+                                   HttpServletRequest request,
+                                   HttpServletResponse response) {
         ArtifactResolutionProfile artifactResolutionProfile = new ArtifactResolutionProfileImpl(httpClient());
         Collection<SAMLBinding> bindings = new ArrayList<>();
         bindings.add(httpRedirectDeflateBinding(parserPool));
@@ -104,7 +108,7 @@ public class SAMLConfig {
         bindings.add(artifactBinding(parserPool, velocityEngine, artifactResolutionProfile));
         bindings.add(httpSOAP11Binding(parserPool));
         bindings.add(httpPAOS11Binding(parserPool));
-        return new ConfigurableSAMLProcessor(bindings, spConfiguration);
+        return new ConfigurableSAMLProcessor(bindings, spConfiguration, request, response);
     }
 
     @Bean

@@ -17,6 +17,7 @@ public class SAMLPrincipal implements Principal {
     private String serviceProviderEntityID;
     private String requestID;
     private String assertionConsumerServiceURL;
+    private String singleLogoutServiceURL;
     private String relayState;
 
     private final List<SAMLAttribute> attributes = new ArrayList<>();
@@ -32,11 +33,14 @@ public class SAMLPrincipal implements Principal {
         this.authorities.addAll(authorities);
     }
 
-    public SAMLPrincipal(String nameID, String nameIDType, List<SAMLAttribute> attributes, List<GrantedAuthority> authorities, String serviceProviderEntityID, String requestID, String assertionConsumerServiceURL, String relayState) {
+    public SAMLPrincipal(String nameID, String nameIDType, List<SAMLAttribute> attributes, List<GrantedAuthority> authorities,
+                         String serviceProviderEntityID, String requestID, String assertionConsumerServiceURL,
+                         String singleLogoutServiceURL, String relayState) {
         this(nameID, nameIDType, attributes, authorities);
         this.serviceProviderEntityID = serviceProviderEntityID;
         this.requestID = requestID;
         this.assertionConsumerServiceURL = assertionConsumerServiceURL;
+        this.singleLogoutServiceURL = singleLogoutServiceURL;
         this.relayState = relayState;
     }
 

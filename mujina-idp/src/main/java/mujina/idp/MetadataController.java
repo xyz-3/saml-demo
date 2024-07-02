@@ -80,11 +80,20 @@ public class MetadataController {
 
         idpssoDescriptor.addSupportedProtocol(SAMLConstants.SAML20P_NS);
 
+       // SingleSignOnService
         SingleSignOnService singleSignOnService = buildSAMLObject(SingleSignOnService.class, SingleSignOnService.DEFAULT_ELEMENT_NAME);
         singleSignOnService.setLocation(idpBaseUrl + "/SingleSignOnService");
         singleSignOnService.setBinding(samlBinding);
-
         idpssoDescriptor.getSingleSignOnServices().add(singleSignOnService);
+
+        //SingleLogoutService
+        SingleLogoutService singleLogoutService = buildSAMLObject(SingleLogoutService.class, SingleLogoutService.DEFAULT_ELEMENT_NAME);
+        singleLogoutService.setLocation(idpBaseUrl + "/SingleLogoutService");
+        singleLogoutService.setBinding(samlBinding);
+        idpssoDescriptor.getSingleLogoutServices().add(singleLogoutService);
+
+
+
 
         X509KeyInfoGeneratorFactory keyInfoGeneratorFactory = new X509KeyInfoGeneratorFactory();
         keyInfoGeneratorFactory.setEmitEntityCertificate(true);
