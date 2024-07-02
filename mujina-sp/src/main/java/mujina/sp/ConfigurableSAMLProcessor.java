@@ -34,28 +34,23 @@ public class ConfigurableSAMLProcessor extends SAMLProcessorImpl {
             throws SAMLException, MetadataProviderException, MessageEncodingException {
 
         Endpoint endpoint = samlContext.getPeerEntityEndpoint();
-
+        String location = endpoint.getLocation();
         SAMLBinding binding = getBinding(endpoint);
 
         samlContext.setLocalEntityId(spConfiguration.getEntityId());
         samlContext.getLocalEntityMetadata().setEntityID(spConfiguration.getEntityId());
-        samlContext.getPeerEntityEndpoint().setLocation(spConfiguration.getIdpSSOServiceURL());
+        samlContext.getPeerEntityEndpoint().setLocation(location);
 
         SPSSODescriptor roleDescriptor = (SPSSODescriptor) samlContext.getLocalEntityMetadata().getRoleDescriptors().get(0);
         AssertionConsumerService assertionConsumerService = roleDescriptor.getAssertionConsumerServices().stream().filter(service -> service.isDefault()).findAny().orElseThrow(() -> new RuntimeException("No default ACS"));
         assertionConsumerService.setBinding(spConfiguration.getProtocolBinding());
-        assertionConsumerService.setLocation(spConfiguration.getAssertionConsumerServiceURL());
 
-        // Add the Cookie to the request
-        Cookie[] cookies = request.getCookies();
-        if (cookies != null) {
-            for (Cookie cookie : cookies) {
-                if ("mujinaSpSessionId".equals(cookie.getName())) {
-                    response.addCookie(cookie);
-                    break;
-                }
-            }
+        if(location.equals("http://localhost:8081/SingleLogoutService")){
+            assertionConsumerService.setBinding("http://localhost:8081/saml/SingleLogout");
+            return super.sendMessage(samlContext, spConfiguration.isNeedsSigning(), binding);
         }
+
+        assertionConsumerService.setLocation(spConfiguration.getAssertionConsumerServiceURL());
 
         return super.sendMessage(samlContext, spConfiguration.isNeedsSigning(), binding);
 
