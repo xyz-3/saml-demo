@@ -65,4 +65,13 @@ public class UserController {
         }
     }
 
+    @GetMapping("/logout")
+    public String logout(Authentication authentication){
+        if(authentication == null){
+            return "redirect:/";
+        }else{
+            return "/";
+        }
+    }
+
 }

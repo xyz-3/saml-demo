@@ -23,11 +23,14 @@ public class ForceAuthnFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
         String servletPath = request.getServletPath();
+        // 处理用户登录请求（已跳转idp域名）
         if (servletPath == null || !servletPath.endsWith("SingleSignOnService") ||
                 request.getMethod().equalsIgnoreCase("GET")) {
             chain.doFilter(request, response);
             return;
         }
+
+        // 处理sp端发来的saml request
         SAMLMessageContext messageContext;
         try {
             messageContext = samlMessageHandler.extractSAMLMessageContext(request, response,

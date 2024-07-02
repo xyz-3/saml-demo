@@ -23,12 +23,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.saml.SAMLAuthenticationProvider;
 import org.springframework.security.saml.SAMLEntryPoint;
+import org.springframework.security.saml.SAMLLogoutFilter;
 import org.springframework.security.saml.SAMLProcessingFilter;
 import org.springframework.security.saml.context.SAMLContextProvider;
 import org.springframework.security.saml.key.JKSKeyManager;
 import org.springframework.security.saml.metadata.*;
 import org.springframework.security.saml.parser.ParserPoolHolder;
 import org.springframework.security.saml.util.VelocityFactory;
+import org.springframework.security.saml.websso.SingleLogoutProfile;
+import org.springframework.security.saml.websso.SingleLogoutProfileImpl;
 import org.springframework.security.saml.websso.WebSSOProfileOptions;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.FilterChainProxy;
@@ -36,6 +39,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
+import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -90,7 +97,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         SAMLAuthenticationProvider samlAuthenticationProvider = new RoleSAMLAuthenticationProvider();
         samlAuthenticationProvider.setUserDetails(new DefaultSAMLUserDetailsService());
         samlAuthenticationProvider.setForcePrincipalAsString(false);
-        samlAuthenticationProvider.setExcludeCredential(true);
+        samlAuthenticationProvider.setExcludeCredential(false);
         return samlAuthenticationProvider;
     }
 
@@ -133,11 +140,42 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .addFilterBefore(metadataGeneratorFilter(), ChannelProcessingFilter.class)
                 .addFilterAfter(samlFilter(), BasicAuthenticationFilter.class)
-                .logout()
-                .clearAuthentication(true)
-                .deleteCookies("mujinaSpSessionId", "mujinaIdpSessionId")
-                .invalidateHttpSession(true)
-                .logoutSuccessUrl("/");
+                .addFilterBefore(mujinaSamlLogoutFilter(), BasicAuthenticationFilter.class);
+
+        // 移除默认的 LogoutFilter
+        http.logout().disable();
+        // 添加自定义的 SAMLLogoutFilter
+        http.addFilterBefore(mujinaSamlLogoutFilter(), LogoutFilter.class);
+    }
+
+    @Bean
+    public SingleLogoutProfile singleLogoutProfile() {
+        return new SingleLogoutProfileImpl();
+    }
+
+
+    @Bean
+    public SAMLLogoutFilter mujinaSamlLogoutFilter() {
+        SAMLLogoutFilter samlLogoutFilter = new SAMLLogoutFilter(successLogoutHandler(), new LogoutHandler[]{samlLogoutHandler()},
+                new LogoutHandler[]{samlLogoutHandler()});
+        samlLogoutFilter.setProfile(singleLogoutProfile());
+        samlLogoutFilter.setFilterProcessesUrl("/logout");
+        return samlLogoutFilter;
+    }
+
+    @Bean
+    public SimpleUrlLogoutSuccessHandler successLogoutHandler() {
+        SimpleUrlLogoutSuccessHandler successLogoutHandler = new SimpleUrlLogoutSuccessHandler();
+         successLogoutHandler.setDefaultTargetUrl("/"); // Optional: set default target URL after logout success
+        return successLogoutHandler;
+    }
+
+    @Bean
+    public SecurityContextLogoutHandler samlLogoutHandler() {
+        SecurityContextLogoutHandler samlLogoutHandler = new SecurityContextLogoutHandler();
+        samlLogoutHandler.setInvalidateHttpSession(true);
+        samlLogoutHandler.setClearAuthentication(true);
+        return samlLogoutHandler;
     }
 
     // Handler deciding where to redirect user after successful login

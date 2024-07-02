@@ -37,6 +37,7 @@ sp:
   needs_signing: true
   # Are endpoints compared. If so then pay notice to the base_url when behind a load balancer
   compare_endpoints: true
+  slo_url: http://localhost:8081/SingleLogoutService
 
 
 spring:
