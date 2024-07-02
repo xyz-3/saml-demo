@@ -21,10 +21,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.saml.SAMLAuthenticationProvider;
-import org.springframework.security.saml.SAMLEntryPoint;
-import org.springframework.security.saml.SAMLLogoutFilter;
-import org.springframework.security.saml.SAMLProcessingFilter;
+import org.springframework.security.saml.*;
 import org.springframework.security.saml.context.SAMLContextProvider;
 import org.springframework.security.saml.key.JKSKeyManager;
 import org.springframework.security.saml.metadata.*;
@@ -87,6 +84,9 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Value("${sp.acs_location_path}")
     private String assertionConsumerServiceURLPath;
 
+    @Value("${sp.slo_location_path}")
+    private String singleLogoutServiceURLPath;
+
     @Value("${secure_cookie}")
     private boolean secureCookie;
 
@@ -132,7 +132,9 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/", "/metadata", "/favicon.ico", "/*.css", "/sp.js", "/api/**", assertionConsumerServiceURLPath + "/**").permitAll()
+                .antMatchers("/", "/metadata", "/favicon.ico", "/*.css", "/sp.js", "/api/**",
+                        assertionConsumerServiceURLPath + "/**",
+                        singleLogoutServiceURLPath + "/**").permitAll()
                 .anyRequest().hasRole("USER")
                 .and()
                 .httpBasic().authenticationEntryPoint(samlEntryPoint())
@@ -217,6 +219,15 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         return samlWebSSOProcessingFilter;
     }
 
+    // 处理slo请求返回的filter
+    @Bean
+    public SAMLLogoutProcessingFilter samlWebSSOLogoutProcessingFilter() throws Exception {
+        SAMLLogoutProcessingFilter samlLogoutProcessingFilter = new SAMLLogoutProcessingFilter(successLogoutHandler(),
+                new LogoutHandler[]{samlLogoutHandler()});
+        samlLogoutProcessingFilter.setFilterProcessesUrl("saml/SingleLogout");
+        return samlLogoutProcessingFilter;
+    }
+
     @Bean
     public MetadataGeneratorFilter metadataGeneratorFilter() throws InvalidKeySpecException, CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException, XMLStreamException {
         return new MetadataGeneratorFilter(metadataGenerator());
@@ -229,6 +240,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
         chains.add(chain("/login/**", samlEntryPoint()));
         chains.add(chain("/metadata/**", metadataDisplayFilter()));
         chains.add(chain(assertionConsumerServiceURLPath + "/**", samlWebSSOProcessingFilter()));
+        chains.add(chain(singleLogoutServiceURLPath + "/**", samlWebSSOLogoutProcessingFilter()));
         return new FilterChainProxy(chains);
     }
 

@@ -62,7 +62,8 @@ public class SloController {
         SAMLMessageContext messageContext = samlMessageHandler.extractSAMLMessageContext(request, response, postRequest);
         LogoutRequest logoutRequest = (LogoutRequest) messageContext.getInboundSAMLMessage();
 
-        String destination = idpConfiguration.getSlsEndpoint();
+        String destination = idpConfiguration.getSlsEndpoint() != null ?
+                idpConfiguration.getSlsEndpoint() : "http://localhost:9090/saml/SingleLogout";
         // Build SAMLPrincipal
         List<SAMLAttribute> attributes = attributes(authentication);
         SAMLPrincipal samlPrincipal = new SAMLPrincipal(
@@ -82,16 +83,22 @@ public class SloController {
                 messageContext.getRelayState()
         );
 
-        if (!Objects.equals(authentication.getPrincipal(), logoutRequest.getNameID().getValue())) {
-            samlMessageHandler.sendLogoutResponse(samlPrincipal, StatusCode.NO_AUTHN_CONTEXT_URI, response);
-            return;
-        }
+//        if (!Objects.equals(authentication.getPrincipal(), logoutRequest.getNameID().getValue())) {
+//            samlMessageHandler.sendLogoutResponse(samlPrincipal, StatusCode.SUCCESS_URI, response);
+//            return;
+//        }
 
         HttpSession session = request.getSession(false);
         SecurityContextHolder.clearContext();
         if (session != null) {
             session.invalidate();
         }
+
+        // delete cookies from the web browser
+        Arrays.stream(request.getCookies()).forEach(cookie -> {
+            cookie.setMaxAge(0);
+//            response.addCookie(cookie);
+        });
 
         samlMessageHandler.sendLogoutResponse(samlPrincipal, StatusCode.SUCCESS_URI, response);
     }
