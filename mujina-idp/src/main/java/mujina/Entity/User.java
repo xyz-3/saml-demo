@@ -4,7 +4,6 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 @Getter
 @ToString
@@ -29,6 +28,10 @@ public class User implements Serializable {
 
     @Column(name = "mfa_enabled")
     private Boolean mfa_enabled;
+
+    public User(String name, String password, String email) {
+        new User(name, password, email, false);
+    }
 
     public User(String name, String password, String email, Boolean mfaEnabled) {
         this.name = name;
