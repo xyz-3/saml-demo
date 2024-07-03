@@ -23,6 +23,10 @@ public class SpConfiguration extends SharedConfiguration {
     private String assertionConsumerServiceURL;
     private String spPrivateKey;
     private String spCertificate;
+    @Value("${sp.slo_url}")
+    private String sloUrl;
+    @Value("${sp.slo_location_path}")
+    private String sloLocationPath;
 
     @Autowired
     public SpConfiguration(JKSKeyManager keyManager,

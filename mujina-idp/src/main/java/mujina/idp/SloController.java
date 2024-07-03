@@ -62,8 +62,14 @@ public class SloController {
         SAMLMessageContext messageContext = samlMessageHandler.extractSAMLMessageContext(request, response, postRequest);
         LogoutRequest logoutRequest = (LogoutRequest) messageContext.getInboundSAMLMessage();
 
+        // get request application id
+        String issuer = logoutRequest.getIssuer().getValue();
+        Map<String, String> issuer_destination = new HashMap<>();
+        issuer_destination.put("http://mock-sp", "http://localhost:9090/saml/SingleLogout");
+        issuer_destination.put("http://mock-sp2", "http://localhost:6060/saml/SingleLogout");
+
         String destination = idpConfiguration.getSlsEndpoint() != null ?
-                idpConfiguration.getSlsEndpoint() : "http://localhost:9090/saml/SingleLogout";
+                idpConfiguration.getSlsEndpoint() : issuer_destination.get(issuer);
         // Build SAMLPrincipal
         List<SAMLAttribute> attributes = attributes(authentication);
         SAMLPrincipal samlPrincipal = new SAMLPrincipal(
