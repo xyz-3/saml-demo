@@ -1,7 +1,5 @@
 package org.data.mujinaidpplatform.dao;
 
-
-import org.data.mujinaidpplatform.Entity.User;
 import org.data.mujinaidpplatform.dto.UserDto;
 
 import java.util.List;

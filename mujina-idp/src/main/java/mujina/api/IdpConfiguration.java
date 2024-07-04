@@ -23,6 +23,7 @@ public class IdpConfiguration extends SharedConfiguration {
     private String acsEndpoint;
 
     private String slsEndpoint;
+    private String issuer;
 
     private AuthenticationMethod authenticationMethod;
     private AuthenticationMethod defaultAuthenticationMethod;

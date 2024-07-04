@@ -1,5 +1,6 @@
 package mujina.idp;
 
+import mujina.api.IdpConfiguration;
 import org.opensaml.common.binding.SAMLMessageContext;
 import org.opensaml.saml2.core.AuthnRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,8 +16,11 @@ public class ForceAuthnFilter extends OncePerRequestFilter {
 
     private SAMLMessageHandler samlMessageHandler;
 
-    public ForceAuthnFilter(SAMLMessageHandler samlMessageHandler) {
+    private IdpConfiguration idpConfiguration;
+
+    public ForceAuthnFilter(SAMLMessageHandler samlMessageHandler, IdpConfiguration idpConfiguration) {
         this.samlMessageHandler = samlMessageHandler;
+        this.idpConfiguration = idpConfiguration;
     }
 
     @Override
@@ -24,8 +28,8 @@ public class ForceAuthnFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String servletPath = request.getServletPath();
         // 处理用户登录请求（已跳转idp域名）
-        if (servletPath == null || !servletPath.endsWith("SingleSignOnService") ||
-                !servletPath.endsWith("SingleLogoutService") ||
+        if (servletPath == null || (!servletPath.endsWith("SingleSignOnService") &&
+                !servletPath.endsWith("SingleLogoutService")) ||
                 request.getMethod().equalsIgnoreCase("GET")) {
             chain.doFilter(request, response);
             return;
@@ -39,6 +43,7 @@ public class ForceAuthnFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
+        idpConfiguration.setIssuer(messageContext.getInboundMessageIssuer());
         AuthnRequest authnRequest = (AuthnRequest) messageContext.getInboundSAMLMessage();
         if (authnRequest.isForceAuthn()) {
             SecurityContextHolder.getContext().setAuthentication(null);

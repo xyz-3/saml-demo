@@ -48,6 +48,11 @@ public class AuthenticationProvider implements org.springframework.security.auth
             if (user == null) {
                 throw new InvalidAuthenticationException("User not found or bad credentials");
             }
+            // Check if this user has access to this Application
+            Boolean check_res = userDao.checkUserAppAccess(user.getId(), idpConfiguration.getIssuer());
+            if (!check_res) {
+                throw new InvalidAuthenticationException("User does not have access to this Application");
+            }
             if (user.getMfaEnabled()){
                 // 2FA Google Authenticator Code认证
                 Object details = authentication.getDetails();

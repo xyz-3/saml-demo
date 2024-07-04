@@ -144,7 +144,7 @@ public class WebSecurityConfigurer implements WebMvcConfigurer {
             http
                     .csrf().disable()
                     .addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                    .addFilterBefore(new ForceAuthnFilter(samlMessageHandler), SAMLAttributeAuthenticationFilter.class)
+                    .addFilterBefore(new ForceAuthnFilter(samlMessageHandler, idpConfiguration), SAMLAttributeAuthenticationFilter.class)
                     .authorizeRequests()
                     .antMatchers("/", "/metadata", "/favicon.ico", "/api/**", "/*.css", "/*.js").permitAll()
                     .antMatchers("/admin/**").hasRole("ADMIN")
