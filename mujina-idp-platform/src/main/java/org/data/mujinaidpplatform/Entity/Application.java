@@ -1,10 +1,10 @@
-package mujina.Entity;
+package org.data.mujinaidpplatform.Entity;
 
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Getter
@@ -32,6 +32,7 @@ public class Application {
     @Column(name = "slo_location_path")
     private String sloLocationPath;
 
-    @Column(name = "create_at")
-    private Timestamp createAt;
+    // timestamp type
+    @Column(name = "created_at")
+    private Timestamp createdAt;
 }

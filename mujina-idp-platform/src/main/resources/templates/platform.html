@@ -1,13 +1,42 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>User</title>
+    <title>Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="/main.css"/>
+    <script>
+        function downloadMetadata(data) {
+            const blob = new Blob([data], { type: 'application/xml' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'metadata.xml';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        function registerApp(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            fetch('/registerApp', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.blob())
+                .then(blob => {
+                    downloadMetadata(blob);
+                    alert('Application registered successfully!');
+                    event.target.reset(); // Clear form contents
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
 </head>
 <section class="user-container">
     <section class="attributes">
-        <h1>Mujina Identity Provider</h1>
+        <h1>Mock Identity Provider</h1>
         <a class="button" th:href="@{/logout}">Logout</a>
         <p>The following information is stored in your authentication</p>
         <ul>
@@ -52,6 +81,36 @@
             </table>
             <button type="submit" class="button">Confirm Changes</button>
         </form>
+
+        <!-- New section for registering new application -->
+        <h2>Register New Application</h2>
+        <form onsubmit="registerApp(event)">
+            <table>
+                <tr>
+                    <td><label for="appName">Application Name:</label></td>
+                    <td><input type="text" id="appName" name="appName" required/></td>
+                </tr>
+                <tr>
+                    <td><label for="entityId">Entity ID:</label></td>
+                    <td><input type="text" id="entityId" name="entityId" required/></td>
+                </tr>
+                <tr>
+                    <td><label for="baseUrl">Base URL:</label></td>
+                    <td><input type="url" id="baseUrl" name="baseUrl" required/></td>
+                </tr>
+                <tr>
+                    <td><label for="acsPath">ACS Path:</label></td>
+                    <td><input type="text" id="acsPath" name="acsPath" required/></td>
+                </tr>
+                <tr>
+                    <td><label for="sloPath">SLO Path:</label></td>
+                    <td><input type="text" id="sloPath" name="sloPath" required/></td>
+                </tr>
+            </table>
+            <button type="submit" class="button">Register Application</button>
+        </form>
+
+
         <section class="powered-by">
             <a href="https://openconext.org/" target="_blank" rel="noreferrer noopener">Copyright © 2018 OpenConext</a>
         </section>

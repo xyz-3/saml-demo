@@ -61,6 +61,7 @@ p.error {
 }
 
 .button {
+    border: none;
     font-size: 22px;
     text-decoration: none;
     color: #fff;
