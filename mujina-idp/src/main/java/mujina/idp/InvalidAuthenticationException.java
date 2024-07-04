@@ -4,7 +4,14 @@ import org.springframework.security.core.AuthenticationException;
 
 public class InvalidAuthenticationException extends AuthenticationException {
 
-    public InvalidAuthenticationException(String msg) {
-        super(msg);
+    private String errorMessage;
+
+    public InvalidAuthenticationException(String errorMessage) {
+        super(errorMessage);
+        this.errorMessage = errorMessage;
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
     }
 }

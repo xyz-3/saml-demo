@@ -28,6 +28,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.saml.SAMLBootstrap;
 import org.springframework.security.saml.key.JKSKeyManager;
 import org.springframework.security.saml.util.VelocityFactory;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -139,6 +140,11 @@ public class WebSecurityConfigurer implements WebMvcConfigurer {
             web.ignoring().antMatchers("/internal/**");
         }
 
+        @Bean
+        public AuthenticationFailureHandler customAuthenticationFailureHandler() {
+            return new CustomAuthenticationFailureHandler();
+        }
+
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http
@@ -152,6 +158,7 @@ public class WebSecurityConfigurer implements WebMvcConfigurer {
                     .and()
                     .formLogin()
                     .loginPage("/login")
+                    .failureHandler(customAuthenticationFailureHandler())
                     .permitAll()
                     .failureUrl("/login?error=true")
                     .permitAll()
