@@ -162,48 +162,6 @@ public class SAMLMessageHandler {
         sendResponseCommon(encoder, authResponse, principal, StatusCode.SUCCESS_URI, response, true);
     }
 
-
-//    @SuppressWarnings("unchecked")
-//    public void sendAuthnResponse(SAMLPrincipal principal,
-//                                  String authnContextClassRefValue,
-//                                  HttpServletResponse response) throws MarshallingException, SignatureException, MessageEncodingException {
-//        Status status = buildStatus(StatusCode.SUCCESS_URI);
-//        String entityId = idpConfiguration.getEntityId();
-//        Credential signingCredential = resolveCredential(entityId);
-//
-//        Response authResponse = buildSAMLObject(Response.class, Response.DEFAULT_ELEMENT_NAME);
-//        Issuer issuer = buildIssuer(entityId);
-//
-//        authResponse.setIssuer(issuer);
-//        authResponse.setID(SAMLBuilder.randomSAMLId());
-//        authResponse.setIssueInstant(new DateTime());
-//        authResponse.setInResponseTo(principal.getRequestID());
-//
-//        Assertion assertion = buildAssertion(principal, authnContextClassRefValue, status, entityId); //
-//        signAssertion(assertion, signingCredential); //
-//        authResponse.getAssertions().add(assertion); //
-//
-//        authResponse.setDestination(principal.getAssertionConsumerServiceURL());
-//        authResponse.setStatus(status);
-//
-//        Endpoint endpoint = buildSAMLObject(Endpoint.class, SingleSignOnService.DEFAULT_ELEMENT_NAME);
-//        endpoint.setLocation(principal.getAssertionConsumerServiceURL());
-//
-//        HttpServletResponseAdapter outTransport = new HttpServletResponseAdapter(response, false);
-//
-//        BasicSAMLMessageContext messageContext = new BasicSAMLMessageContext();
-//
-//        messageContext.setOutboundMessageTransport(outTransport);
-//        messageContext.setPeerEntityEndpoint(endpoint);
-//        messageContext.setOutboundSAMLMessage(authResponse);
-//        messageContext.setOutboundSAMLMessageSigningCredential(signingCredential);
-//        messageContext.setOutboundMessageIssuer(entityId);
-//        messageContext.setRelayState(principal.getRelayState());
-//
-//        encoder.encode(messageContext);
-//
-//    }
-
     private Credential resolveCredential(String entityId) {
         try {
             return keyManager.resolveSingle(new CriteriaSet(new EntityIDCriteria(entityId)));

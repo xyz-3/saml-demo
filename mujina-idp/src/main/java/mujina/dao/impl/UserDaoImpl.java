@@ -1,6 +1,7 @@
-package mujina.dao;
+package mujina.dao.impl;
 
 import mujina.Entity.User;
+import mujina.dao.UserDao;
 import mujina.dto.UserDto;
 import mujina.repository.UserAuthoritiesRepository;
 import mujina.repository.UserRepository;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class UserDaoImpl implements UserDao{
+public class UserDaoImpl implements UserDao {
     @Autowired
     private UserRepository userRepository;
     @Autowired

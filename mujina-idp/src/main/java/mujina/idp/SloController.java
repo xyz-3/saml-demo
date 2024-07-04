@@ -2,6 +2,7 @@ package mujina.idp;
 
 
 import mujina.api.IdpConfiguration;
+import mujina.dao.ApplicationDao;
 import mujina.saml.SAMLAttribute;
 import mujina.saml.SAMLPrincipal;
 import org.opensaml.common.binding.SAMLMessageContext;
@@ -45,6 +46,9 @@ public class SloController {
     @Autowired
     private IdpConfiguration idpConfiguration;
 
+    @Autowired
+    private ApplicationDao applicationDao;
+
     @GetMapping("/SingleLogoutService")
     public void singleLogoutServiceGet(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
             throws IOException, MarshallingException, SignatureException, MessageEncodingException, ValidationException, SecurityException, MessageDecodingException, MetadataProviderException, ServletException {
@@ -64,12 +68,9 @@ public class SloController {
 
         // get request application id
         String issuer = logoutRequest.getIssuer().getValue();
-        Map<String, String> issuer_destination = new HashMap<>();
-        issuer_destination.put("http://mock-sp", "http://localhost:9090/saml/SingleLogout");
-        issuer_destination.put("http://mock-sp2", "http://localhost:6060/saml/SingleLogout");
 
         String destination = idpConfiguration.getSlsEndpoint() != null ?
-                idpConfiguration.getSlsEndpoint() : issuer_destination.get(issuer);
+                idpConfiguration.getSlsEndpoint() : applicationDao.getSloUrlByEntityId(issuer);
         // Build SAMLPrincipal
         List<SAMLAttribute> attributes = attributes(authentication);
         SAMLPrincipal samlPrincipal = new SAMLPrincipal(
@@ -88,11 +89,6 @@ public class SloController {
                 destination,
                 messageContext.getRelayState()
         );
-
-//        if (!Objects.equals(authentication.getPrincipal(), logoutRequest.getNameID().getValue())) {
-//            samlMessageHandler.sendLogoutResponse(samlPrincipal, StatusCode.SUCCESS_URI, response);
-//            return;
-//        }
 
         HttpSession session = request.getSession(false);
         SecurityContextHolder.clearContext();
