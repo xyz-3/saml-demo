@@ -82,6 +82,28 @@
             <button type="submit" class="button">Confirm Changes</button>
         </form>
 
+        <h2>Registered Applications</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Application Name</th>
+                <th>Entity ID</th>
+                <th>Base URL</th>
+                <th>ACS Path</th>
+                <th>SLO Path</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="app : ${apps}">
+                <td th:text="${app.name}"></td>
+                <td th:text="${app.entity_id}"></td>
+                <td th:text="${app.baseUrl}"></td>
+                <td th:text="${app.acsLocationPath}"></td>
+                <td th:text="${app.sloLocationPath}"></td>
+            </tr>
+            </tbody>
+        </table>
+
         <!-- New section for registering new application -->
         <h2>Register New Application</h2>
         <form onsubmit="registerApp(event)">

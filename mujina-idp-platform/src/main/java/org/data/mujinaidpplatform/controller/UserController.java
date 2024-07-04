@@ -1,6 +1,7 @@
 package org.data.mujinaidpplatform.controller;
 
 
+import org.data.mujinaidpplatform.Entity.Application;
 import org.data.mujinaidpplatform.dao.ApplicationDao;
 import org.data.mujinaidpplatform.dao.UserDao;
 import org.data.mujinaidpplatform.dto.UserDto;
@@ -54,6 +55,8 @@ public class UserController {
         UserDto admin = users.stream().filter(user -> user.getAuthorities().contains("ROLE_ADMIN")).findFirst().orElse(null);
         users.remove(admin);
         modelMap.addAttribute("users", users);
+        List<Application> apps = applicationDao.getAllApplications();
+        modelMap.addAttribute("apps", apps);
         return "platform";
     }
 

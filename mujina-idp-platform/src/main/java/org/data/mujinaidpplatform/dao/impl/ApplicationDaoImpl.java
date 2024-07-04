@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 
 @Repository
 public class ApplicationDaoImpl implements ApplicationDao {
@@ -41,5 +42,10 @@ public class ApplicationDaoImpl implements ApplicationDao {
         String metadata = new String(Files.readAllBytes(Paths.get("/Users/ycx/Documents/Projects/a&a/Mujina/mujina.local.idp.metadata.xml")));
 
         return metadata;
+    }
+
+    @Override
+    public List<Application> getAllApplications() {
+        return applicationRepository.findAll();
     }
 }
