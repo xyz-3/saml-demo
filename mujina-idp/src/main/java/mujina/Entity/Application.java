@@ -32,6 +32,6 @@ public class Application {
     @Column(name = "slo_location_path")
     private String sloLocationPath;
 
-    @Column(name = "create_at")
-    private Timestamp createAt;
+    @Column(name = "created_at", updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp createdAt;
 }

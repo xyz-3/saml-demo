@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
@@ -37,6 +38,7 @@ public class ApplicationDaoImpl implements ApplicationDao {
         application.setBaseUrl(baseUrl);
         application.setAcsLocationPath(acsLocationPath);
         application.setSloLocationPath(sloLocationPath);
+        application.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         applicationRepository.save(application);
 
         String metadata = new String(Files.readAllBytes(Paths.get("/Users/ycx/Documents/Projects/a&a/Mujina/mujina.local.idp.metadata.xml")));
