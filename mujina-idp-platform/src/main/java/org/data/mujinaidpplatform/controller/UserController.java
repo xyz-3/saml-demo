@@ -3,6 +3,7 @@ package org.data.mujinaidpplatform.controller;
 
 import org.data.mujinaidpplatform.Entity.Application;
 import org.data.mujinaidpplatform.dao.ApplicationDao;
+import org.data.mujinaidpplatform.dao.UserApplicationDao;
 import org.data.mujinaidpplatform.dao.UserDao;
 import org.data.mujinaidpplatform.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,8 @@ public class UserController {
     private UserDao userDao;
     @Autowired
     private ApplicationDao applicationDao;
+    @Autowired
+    private UserApplicationDao userApplicationDao;
 
     @GetMapping("/")
     public String index() {
@@ -54,8 +57,6 @@ public class UserController {
         // filter admin out of users
         UserDto admin = users.stream().filter(user -> user.getAuthorities().contains("ROLE_ADMIN")).findFirst().orElse(null);
         modelMap.addAttribute("user", admin);
-//        List<Application> apps = applicationDao.getAllApplications();
-//        modelMap.addAttribute("apps", apps);
         return "platform";
     }
 
@@ -76,8 +77,6 @@ public class UserController {
         UserDto admin = users.stream().filter(user -> user.getAuthorities().contains("ROLE_ADMIN")).findFirst().orElse(null);
         users.remove(admin);
         modelMap.addAttribute("users", users);
-//        List<Application> apps = applicationDao.getAllApplications();
-//        modelMap.addAttribute("apps", apps);
         return "AllUsers";
     }
 
@@ -134,7 +133,13 @@ public class UserController {
     @PostMapping("/addUserToApp")
     public String addUserToApp(@RequestParam Map<String, String> allParams, RedirectAttributes redirectAttributes){
         String userName = allParams.get("userName");
-
+        String entityId = allParams.get("entity_id");
+        boolean ret = userApplicationDao.addUserApplication(userName, entityId);
+        if(ret){
+            redirectAttributes.addFlashAttribute("msg", "User added to application successfully");
+        }else{
+            redirectAttributes.addFlashAttribute("msg", "Failed to add user to application");
+        }
         return "redirect:/platform";
     }
 }

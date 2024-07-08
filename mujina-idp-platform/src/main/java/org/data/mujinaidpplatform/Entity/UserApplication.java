@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.sql.Timestamp;
+
 @Entity(name = "user_application")
 @Getter
 @Setter
@@ -20,5 +22,5 @@ public class UserApplication {
     private Integer applicationId;
 
     @Column(name = "created_at")
-    private String createdAt;
+    private Timestamp createdAt;
 }

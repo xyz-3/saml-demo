@@ -1,8 +1,37 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>User</title>
+    <title>Applications</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="/main.css"/>
+    <script>
+        function downloadMetadata(data) {
+            const blob = new Blob([data], { type: 'application/xml' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.style.display = 'none';
+            a.href = url;
+            a.download = 'metadata.xml';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        function registerApp(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            fetch('/registerApp', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.blob())
+                .then(blob => {
+                    downloadMetadata(blob);
+                    alert('Application registered successfully!');
+                    event.target.reset(); // Clear form contents
+                })
+                .catch(error => console.error('Error:', error));
+        }
+    </script>
 </head>
 <section class="user-container">
     <section class="attributes">
@@ -56,8 +85,24 @@
             <button type="submit" class="button">Register Application</button>
         </form>
 
+        <h2>Add User to Application</h2>
+        <form onsubmit="addUser(event)">
+            <table>
+                <tr>
+                    <td><label for="userName">User Name:</label></td>
+                    <td><input type="text" id="userName" name="userName" required/></td>
+                </tr>
+                <tr>
+                    <td><label for="entity_id">Entity Id:</label></td>
+                    <td><input type="text" id="entity_id" name="entity_id" required/></td>
+                </tr>
+            </table>
+            <p></p>
+            <button type="submit" class="button">Add User</button>
+
         <p></p>
         <a class="button" th:href="@{/platform.html}">Back to Admin Page</a>
+        </form>
     </section>
 </section>
 </html>
