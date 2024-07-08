@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -131,15 +132,17 @@ public class UserController {
     }
 
     @PostMapping("/addUserToApp")
-    public String addUserToApp(@RequestParam Map<String, String> allParams, RedirectAttributes redirectAttributes){
+    public ResponseEntity<Map<String, String>> addUserToApp(@RequestParam Map<String, String> allParams){
         String userName = allParams.get("userName");
         String entityId = allParams.get("entity_id");
         boolean ret = userApplicationDao.addUserApplication(userName, entityId);
+        Map<String, String> response = new HashMap<>();
         if(ret){
-            redirectAttributes.addFlashAttribute("msg", "User added to application successfully");
+            response.put("message", "Success!");
+            return ResponseEntity.ok(response);
         }else{
-            redirectAttributes.addFlashAttribute("msg", "Failed to add user to application");
+            response.put("message", "Failed!");
+            return ResponseEntity.badRequest().body(response);
         }
-        return "redirect:/platform";
     }
 }

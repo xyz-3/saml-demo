@@ -31,6 +31,28 @@
                 })
                 .catch(error => console.error('Error:', error));
         }
+
+        function addUserToApp(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            fetch('/addUserToApp', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response =>
+                    response.json()
+                )
+                .then(data => {
+                        if(data.message === "Success"){
+                            alert('User added successfully!');
+                            event.target.reset(); // Clear form contents
+                        } else {
+                            alert('User not found!');
+                        }
+                    }
+                )
+                .catch(error => console.error('Error:', error));
+        }
     </script>
 </head>
 <section class="user-container">
@@ -86,7 +108,7 @@
         </form>
 
         <h2>Add User to Application</h2>
-        <form onsubmit="addUser(event)">
+        <form onsubmit="addUserToApp(event)">
             <table>
                 <tr>
                     <td><label for="userName">User Name:</label></td>
