@@ -48,57 +48,68 @@
             <li>Email</li>
             <li th:text="${user.email}"></li>
         </ul>
-        <a class="button" th:href="@{/AllUsers.html}">Check Users</a>
+        <ul>
+            <li>Applications</li>
+            <li th:text="${user.applications}"></li>
+        </ul>
+        <ul>
+            <li>Authorities</li>
+            <li th:text="${user.authorities}"></li>
+        </ul>
 
-        <h2>Registered Applications</h2>
-        <table>
-            <thead>
-            <tr>
-                <th>Application Name</th>
-                <th>Entity ID</th>
-                <th>Base URL</th>
-                <th>ACS Path</th>
-                <th>SLO Path</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="app : ${apps}">
-                <td th:text="${app.name}"></td>
-                <td th:text="${app.entity_id}"></td>
-                <td th:text="${app.baseUrl}"></td>
-                <td th:text="${app.acsLocationPath}"></td>
-                <td th:text="${app.sloLocationPath}"></td>
-            </tr>
-            </tbody>
-        </table>
+        <a class="button" th:href="@{/AllUsers.html}">Check Users</a>
+        <p></p>
+        <a class="button" th:href="@{/Applications.html}">Check Applications</a>
+
+<!--        <h2>Registered Applications</h2>-->
+<!--        <table>-->
+<!--            <thead>-->
+<!--            <tr>-->
+<!--                <th>Application Name</th>-->
+<!--                <th>Entity ID</th>-->
+<!--                <th>Base URL</th>-->
+<!--                <th>ACS Path</th>-->
+<!--                <th>SLO Path</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr th:each="app : ${apps}">-->
+<!--                <td th:text="${app.name}"></td>-->
+<!--                <td th:text="${app.entity_id}"></td>-->
+<!--                <td th:text="${app.baseUrl}"></td>-->
+<!--                <td th:text="${app.acsLocationPath}"></td>-->
+<!--                <td th:text="${app.sloLocationPath}"></td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--        </table>-->
 
         <!-- New section for registering new application -->
-        <h2>Register New Application</h2>
-        <form onsubmit="registerApp(event)">
-            <table>
-                <tr>
-                    <td><label for="appName">Application Name:</label></td>
-                    <td><input type="text" id="appName" name="appName" required/></td>
-                </tr>
-                <tr>
-                    <td><label for="entityId">Entity ID:</label></td>
-                    <td><input type="text" id="entityId" name="entityId" required/></td>
-                </tr>
-                <tr>
-                    <td><label for="baseUrl">Base URL:</label></td>
-                    <td><input type="url" id="baseUrl" name="baseUrl" required/></td>
-                </tr>
-                <tr>
-                    <td><label for="acsPath">ACS Path:</label></td>
-                    <td><input type="text" id="acsPath" name="acsPath" required/></td>
-                </tr>
-                <tr>
-                    <td><label for="sloPath">SLO Path:</label></td>
-                    <td><input type="text" id="sloPath" name="sloPath" required/></td>
-                </tr>
-            </table>
-            <button type="submit" class="button">Register Application</button>
-        </form>
+<!--        <h2>Register New Application</h2>-->
+<!--        <form onsubmit="registerApp(event)">-->
+<!--            <table>-->
+<!--                <tr>-->
+<!--                    <td><label for="appName">Application Name:</label></td>-->
+<!--                    <td><input type="text" id="appName" name="appName" required/></td>-->
+<!--                </tr>-->
+<!--                <tr>-->
+<!--                    <td><label for="entityId">Entity ID:</label></td>-->
+<!--                    <td><input type="text" id="entityId" name="entityId" required/></td>-->
+<!--                </tr>-->
+<!--                <tr>-->
+<!--                    <td><label for="baseUrl">Base URL:</label></td>-->
+<!--                    <td><input type="url" id="baseUrl" name="baseUrl" required/></td>-->
+<!--                </tr>-->
+<!--                <tr>-->
+<!--                    <td><label for="acsPath">ACS Path:</label></td>-->
+<!--                    <td><input type="text" id="acsPath" name="acsPath" required/></td>-->
+<!--                </tr>-->
+<!--                <tr>-->
+<!--                    <td><label for="sloPath">SLO Path:</label></td>-->
+<!--                    <td><input type="text" id="sloPath" name="sloPath" required/></td>-->
+<!--                </tr>-->
+<!--            </table>-->
+<!--            <button type="submit" class="button">Register Application</button>-->
+<!--        </form>-->
 
 
         <section class="powered-by">

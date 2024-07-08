@@ -54,8 +54,8 @@ public class UserController {
         // filter admin out of users
         UserDto admin = users.stream().filter(user -> user.getAuthorities().contains("ROLE_ADMIN")).findFirst().orElse(null);
         modelMap.addAttribute("user", admin);
-        List<Application> apps = applicationDao.getAllApplications();
-        modelMap.addAttribute("apps", apps);
+//        List<Application> apps = applicationDao.getAllApplications();
+//        modelMap.addAttribute("apps", apps);
         return "platform";
     }
 
@@ -76,9 +76,16 @@ public class UserController {
         UserDto admin = users.stream().filter(user -> user.getAuthorities().contains("ROLE_ADMIN")).findFirst().orElse(null);
         users.remove(admin);
         modelMap.addAttribute("users", users);
+//        List<Application> apps = applicationDao.getAllApplications();
+//        modelMap.addAttribute("apps", apps);
+        return "AllUsers";
+    }
+
+    @GetMapping("/Applications.html")
+    public String applications(ModelMap modelMap){
         List<Application> apps = applicationDao.getAllApplications();
         modelMap.addAttribute("apps", apps);
-        return "AllUsers";
+        return "Applications";
     }
 
     @PostMapping("/modifyAuthorities")
