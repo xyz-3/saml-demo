@@ -1,8 +1,8 @@
-package mujina.Entity;
+package org.data.mujinaidpplatform.Entity;
 
-import lombok.*;
-
-import javax.persistence.*;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity(name = "user_application")
 @Getter

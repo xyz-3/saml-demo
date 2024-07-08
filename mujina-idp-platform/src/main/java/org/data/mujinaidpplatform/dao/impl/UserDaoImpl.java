@@ -3,6 +3,7 @@ package org.data.mujinaidpplatform.dao.impl;
 import org.data.mujinaidpplatform.Entity.User;
 import org.data.mujinaidpplatform.dao.UserDao;
 import org.data.mujinaidpplatform.dto.UserDto;
+import org.data.mujinaidpplatform.repository.UserApplicationRepository;
 import org.data.mujinaidpplatform.repository.UserAuthoritiesRepository;
 import org.data.mujinaidpplatform.repository.UserRepository;
 
@@ -19,6 +20,8 @@ public class UserDaoImpl implements UserDao {
     private UserRepository userRepository;
     @Autowired
     private UserAuthoritiesRepository userAuthoritiesRepository;
+    @Autowired
+    private UserApplicationRepository userApplicationRepository;
     @Override
     public UserDto getUser(String name, String password) {
         Optional<User> user = userRepository.findByNameAndPassword(name, password);
@@ -26,7 +29,9 @@ public class UserDaoImpl implements UserDao {
             return null;
         }
         List<String> authorities = userAuthoritiesRepository.findAllAuthoritiesByUserId(user.get().getId());
-        UserDto userDto = new UserDto(user.get(), authorities);
+        List<Integer> applicationIds = userApplicationRepository.findApplicationIdByUserId(user.get().getId());
+        List<String> applications = userApplicationRepository.findApplicationsByUserId(applicationIds);
+        UserDto userDto = new UserDto(user.get(), applications, authorities);
         return userDto;
     }
     @Override
@@ -35,7 +40,9 @@ public class UserDaoImpl implements UserDao {
         List<UserDto> userDtos = new ArrayList<>();
         for(User user : users){
             List<String> authorities = userAuthoritiesRepository.findAllAuthoritiesByUserId(user.getId());
-            UserDto userDto = new UserDto(user, authorities);
+            List<Integer> applicationIds = userApplicationRepository.findApplicationIdByUserId(user.getId());
+            List<String> applications = userApplicationRepository.findApplicationsByUserId(applicationIds);
+            UserDto userDto = new UserDto(user, applications, authorities);
             userDtos.add(userDto);
         }
         return userDtos;

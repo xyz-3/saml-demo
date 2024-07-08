@@ -53,8 +53,7 @@ public class UserController {
         List<UserDto> users = userDao.getAllUsers();
         // filter admin out of users
         UserDto admin = users.stream().filter(user -> user.getAuthorities().contains("ROLE_ADMIN")).findFirst().orElse(null);
-        users.remove(admin);
-        modelMap.addAttribute("users", users);
+        modelMap.addAttribute("user", admin);
         List<Application> apps = applicationDao.getAllApplications();
         modelMap.addAttribute("apps", apps);
         return "platform";
@@ -68,6 +67,18 @@ public class UserController {
     @GetMapping("/logout")
     public String logout(){
         return "redirect:/";
+    }
+
+    @GetMapping("/AllUsers.html")
+    public String allUsers(ModelMap modelMap){
+        List<UserDto> users = userDao.getAllUsers();
+        // filter admin out of users
+        UserDto admin = users.stream().filter(user -> user.getAuthorities().contains("ROLE_ADMIN")).findFirst().orElse(null);
+        users.remove(admin);
+        modelMap.addAttribute("users", users);
+        List<Application> apps = applicationDao.getAllApplications();
+        modelMap.addAttribute("apps", apps);
+        return "AllUsers";
     }
 
     @PostMapping("/modifyAuthorities")
@@ -95,7 +106,7 @@ public class UserController {
         }
         redirectAttributes.addFlashAttribute("user", admin);
         redirectAttributes.addFlashAttribute("users", users);
-        return "redirect:/platform";
+        return "redirect:/AllUsers.html";
     }
 
     @PostMapping("/registerApp")
@@ -111,5 +122,12 @@ public class UserController {
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=metadata.xml");
         return new ResponseEntity<>(metadata.getBytes(), headers, HttpStatus.OK);
+    }
+
+    @PostMapping("/addUserToApp")
+    public String addUserToApp(@RequestParam Map<String, String> allParams, RedirectAttributes redirectAttributes){
+        String userName = allParams.get("userName");
+
+        return "redirect:/platform";
     }
 }

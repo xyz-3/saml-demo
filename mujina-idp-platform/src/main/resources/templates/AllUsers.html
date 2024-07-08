@@ -1,0 +1,45 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="/main.css"/>
+</head>
+<section class="user-container">
+    <section class="attributes">
+        <h1>All Users</h1>
+        <form action="#" th:action="@{/modifyAuthorities}" method="post">
+            <table>
+                <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Applications</th>
+                    <th>Authorities</th>
+                    <th>Add Authorities</th>
+                    <th>Delete Authorities</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.name}"></td>
+                    <td th:text="${user.email}"></td>
+                    <td th:text="${user.applications}"></td>
+                    <td th:text="${user.authorities}"></td>
+                    <td>
+                        <input type="text" th:name="'addAuthority_' + ${user.name}"/>
+                    </td>
+                    <td>
+                        <input type="text" th:name="'delAuthority_' + ${user.name}"/>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <button type="submit" class="button">Confirm Changes</button>
+        </form>
+        <a class="button" th:href="@{/platform.html}">Back to User Page</a>
+        <section class="powered-by">
+            <a href="https://openconext.org/" target="_blank" rel="noreferrer noopener">Copyright © 2018 OpenConext</a>
+        </section>
+    </section>
+</section>
+</html>

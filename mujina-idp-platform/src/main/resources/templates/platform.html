@@ -34,6 +34,7 @@
         }
     </script>
 </head>
+<body>
 <section class="user-container">
     <section class="attributes">
         <h1>Mock Identity Provider</h1>
@@ -47,40 +48,7 @@
             <li>Email</li>
             <li th:text="${user.email}"></li>
         </ul>
-<!--        <ul th:each="authority : ${user.authorities}">-->
-<!--            <li>Authority</li>-->
-<!--            <li th:text="${authority}"></li>-->
-<!--        </ul>-->
-        <h2>All Users</h2>
-        <form action="#" th:action="@{/modifyAuthorities}" method="post">
-            <table>
-                <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Authorities</th>
-                    <th>Add Authorities</th>
-                    <th>Delete Authorities</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="user : ${users}">
-                    <td th:text="${user.name}"></td>
-                    <td>
-                        <ul>
-                            <li th:each="authority : ${user.authorities}" th:text="${authority}"></li>
-                        </ul>
-                    </td>
-                    <td>
-                        <input type="text" th:name="'addAuthority_' + ${user.name}"/>
-                    </td>
-                    <td>
-                        <input type="text" th:name="'delAuthority_' + ${user.name}"/>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-            <button type="submit" class="button">Confirm Changes</button>
-        </form>
+        <a class="button" th:href="@{/AllUsers.html}">Check Users</a>
 
         <h2>Registered Applications</h2>
         <table>
@@ -138,4 +106,5 @@
         </section>
     </section>
 </section>
+</body>
 </html>
