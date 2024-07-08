@@ -27,6 +27,7 @@ public class SpConfiguration extends SharedConfiguration {
     private String sloUrl;
     @Value("${sp.slo_location_path}")
     private String sloLocationPath;
+    private String singleLogoutServiceURL;
 
     @Autowired
     public SpConfiguration(JKSKeyManager keyManager,
@@ -42,6 +43,7 @@ public class SpConfiguration extends SharedConfiguration {
         this.setDefaultEntityId(defaultEntityId);
         this.setDefaultIdpSSOServiceURL(defaultIdpSSOServiceURL);
         this.setDefaultAssertionConsumerServiceURL(spBaseUrl + defaultAssertionConsumerServiceURLPath);
+        this.setSingleLogoutServiceURL(spBaseUrl + sloLocationPath);
         this.setDefaultProtocolBinding(defaultProtocolBinding);
         this.setSpPrivateKey(spPrivateKey);
         this.setSpCertificate(spCertificate);

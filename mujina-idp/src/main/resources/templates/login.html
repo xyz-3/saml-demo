@@ -66,8 +66,7 @@
 
 <main class="login-container">
     <div class="login">
-        <h1>Mujina Identity Provider</h1>
-        <p th:if="${param.error}" class="error">Wrong user or password</p>
+        <h1>Mock Identity Provider</h1>
         <form class="login-form" th:action="@{/login}" method="post">
             <label for="username" class="sr-only">Username</label>
             <input type="text" id="username" name="username" autofocus="autofocus" placeholder="Username"/>
