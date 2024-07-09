@@ -4,35 +4,6 @@
     <title>Admin</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="/main.css"/>
-<!--    <script>-->
-<!--        function downloadMetadata(data) {-->
-<!--            const blob = new Blob([data], { type: 'application/xml' });-->
-<!--            const url = window.URL.createObjectURL(blob);-->
-<!--            const a = document.createElement('a');-->
-<!--            a.style.display = 'none';-->
-<!--            a.href = url;-->
-<!--            a.download = 'metadata.xml';-->
-<!--            document.body.appendChild(a);-->
-<!--            a.click();-->
-<!--            window.URL.revokeObjectURL(url);-->
-<!--        }-->
-
-<!--        function registerApp(event) {-->
-<!--            event.preventDefault();-->
-<!--            const formData = new FormData(event.target);-->
-<!--            fetch('/registerApp', {-->
-<!--                method: 'POST',-->
-<!--                body: formData-->
-<!--            })-->
-<!--                .then(response => response.blob())-->
-<!--                .then(blob => {-->
-<!--                    downloadMetadata(blob);-->
-<!--                    alert('Application registered successfully!');-->
-<!--                    event.target.reset(); // Clear form contents-->
-<!--                })-->
-<!--                .catch(error => console.error('Error:', error));-->
-<!--        }-->
-<!--    </script>-->
 </head>
 <body>
 <section class="user-container">

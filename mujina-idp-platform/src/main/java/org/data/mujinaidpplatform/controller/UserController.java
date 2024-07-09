@@ -52,6 +52,27 @@ public class UserController {
         return "index";
     }
 
+    @PostMapping("/registerUser")
+    public ResponseEntity<Map<String, String>> register(@RequestParam Map<String, String> allParams){
+        String username = allParams.get("username");
+        String password = allParams.get("password");
+        String passwordrepeat = allParams.get("passwordrepeat");
+        String email = allParams.get("email");
+        Map<String, String> response = new HashMap<>();
+        if(!passwordrepeat.equals(password)){
+            response.put("message", "Passwords do not match");
+            return ResponseEntity.badRequest().body(response);
+        }
+        userDao.registerUser(username, password, email);
+        response.put("message", "Success");
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/register.html")
+    public String register(){
+        return "register";
+    }
+
     @GetMapping({"platform", "/platform.html"})
     public String platform(ModelMap modelMap){
         List<UserDto> users = userDao.getAllUsers();

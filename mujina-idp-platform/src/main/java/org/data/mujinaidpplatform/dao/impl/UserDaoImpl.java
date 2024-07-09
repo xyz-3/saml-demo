@@ -25,7 +25,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public UserDto getUser(String name, String password) {
         Optional<User> user = userRepository.findByNameAndPassword(name, password);
-        if(!user.isPresent()){
+        if(user.isEmpty()){
             return null;
         }
         List<String> authorities = userAuthoritiesRepository.findAllAuthoritiesByUserId(user.get().getId());
@@ -51,7 +51,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void addAuthority(Integer id, String authority) {
         Optional<User> user = userRepository.findById(id);
-        if(!user.isPresent()){
+        if(user.isEmpty()){
             return;
         }
         userAuthoritiesRepository.addAuthority(user.get().getId(), authority);
@@ -60,9 +60,15 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void removeAuthority(Integer id, String authority) {
         Optional<User> user = userRepository.findById(id);
-        if(!user.isPresent()){
+        if(user.isEmpty()){
             return;
         }
         userAuthoritiesRepository.removeAuthority(user.get().getId(), authority);
+    }
+
+    @Override
+    public void registerUser(String username, String password, String email) {
+        User user = userRepository.save(new User(username, password, email, false));
+        userAuthoritiesRepository.addAuthority(user.getId(), "ROLE_USER");
     }
 }

@@ -12,4 +12,6 @@ public interface UserDao {
     void addAuthority(Integer id, String authority);
 
     void removeAuthority(Integer id, String authority);
+
+    void registerUser(String username, String password, String email);
 }

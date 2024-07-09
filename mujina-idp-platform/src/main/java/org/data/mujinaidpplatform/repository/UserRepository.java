@@ -21,4 +21,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying
     @Query("UPDATE user u SET u.mfa_enabled = :mfaEnabled WHERE u.id = :id")
     void updateMfaEnabledById(Integer id, Boolean mfaEnabled);
+
+    @Transactional
+    @Modifying
+    @Query("INSERT INTO user(name, password, email, mfa_enabled) VALUES(:username, :password, :email, false)")
+    Integer insertUser(String username, String password, String email);
 }

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Register page</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="/main.css"/>
+  <script>
+    function registerUser(event) {
+      event.preventDefault();
+      const formData = new FormData(event.target);
+      fetch('/registerUser', {
+        method: 'POST',
+        body: formData
+      })
+              .then(response =>
+                      response.json()
+              )
+              .then(data => {
+                // console.log(data.message);
+                        if(data.message === "Success"){
+                          alert('Register successfully!');
+                          event.target.reset(); // Clear form contents
+                        } else {
+                          alert(data.message);
+                        }
+                      }
+              )
+              .catch(error => console.error('Error:', error));
+    }
+  </script>
+</head>
+<body>
+<main class="login-container">
+  <div class="login">
+    <h1>Mock Identity Provider</h1>
+    <p th:if="${param.error}" class="error">W</p>
+    <form class="login-form" onsubmit="registerUser(event)">
+      <label for="username" class="sr-only">Username</label>
+      <input type="text" id="username" name="username" autofocus="autofocus" placeholder="Username"/>
+      <label for="password" class="sr-only">Password</label>
+      <input type="password" id="password" name="password" placeholder="Password"/>
+      <label for="passwordrepeat" class="sr-only">Password</label>
+      <input type="password" id="passwordrepeat" name="passwordrepeat" placeholder="Password Again"/>
+      <label for="email" class="sr-only">email</label>
+      <input type="text" id="email" name="email" autofocus="autofocus" placeholder="Email"/>
+      <input class="button" type="submit" value="Register"/>
+      <div>
+        <input id="persist-me" name="persist-me" type="checkbox"/>
+        <label class="persist-me" for="persist-me">Persist me?</label>
+      </div>
+      <section class="powered-by">
+        <a th:href="@{/}" target="_blank" rel="noreferrer noopener">Back to Login</a>
+      </section>
+    </form>
+  </div>
+</main>
+</body>
+</html>
