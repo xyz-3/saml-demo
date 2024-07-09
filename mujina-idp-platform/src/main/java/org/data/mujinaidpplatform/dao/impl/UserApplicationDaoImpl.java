@@ -23,7 +23,7 @@ public class UserApplicationDaoImpl implements UserApplicationDao {
     public boolean addUserApplication(String username, String entityId) {
         Integer userId = userRepository.findIdByName(username);
         Integer applicationId = applicationRepository.findIdByEntityId(entityId);
-        if(userId == null || applicationId == null){
+        if (userId == null || applicationId == null) {
             return false;
         }
         UserApplication userApplication = new UserApplication();

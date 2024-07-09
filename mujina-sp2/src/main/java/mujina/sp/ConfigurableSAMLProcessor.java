@@ -38,7 +38,7 @@ public class ConfigurableSAMLProcessor extends SAMLProcessorImpl {
         AssertionConsumerService assertionConsumerService = roleDescriptor.getAssertionConsumerServices().stream().filter(service -> service.isDefault()).findAny().orElseThrow(() -> new RuntimeException("No default ACS"));
         assertionConsumerService.setBinding(spConfiguration.getProtocolBinding());
 
-        if(location.equals(spConfiguration.getSloUrl())){
+        if (location.equals(spConfiguration.getSloUrl())) {
             assertionConsumerService.setBinding(spConfiguration.getSingleLogoutServiceURL());
             return super.sendMessage(samlContext, spConfiguration.isNeedsSigning(), binding);
         }

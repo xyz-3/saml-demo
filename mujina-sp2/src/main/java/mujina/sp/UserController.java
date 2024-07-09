@@ -35,10 +35,10 @@ public class UserController {
 
     @GetMapping({"admin", "/admin.html"})
     public String admin(Authentication authentication, ModelMap modelMap) {
-        if(authentication == null) {
+        if (authentication == null) {
             return "redirect:/";
         }
-        if(authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
+        if (authentication.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
             return "redirect:/home";
         }
         modelMap.addAttribute("user", authentication.getPrincipal());
@@ -66,10 +66,10 @@ public class UserController {
     }
 
     @GetMapping("/logout")
-    public String logout(Authentication authentication){
-        if(authentication == null){
+    public String logout(Authentication authentication) {
+        if (authentication == null) {
             return "redirect:/";
-        }else{
+        } else {
             return "/";
         }
     }

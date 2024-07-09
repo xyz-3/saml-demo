@@ -53,14 +53,14 @@ public class AuthenticationProvider implements org.springframework.security.auth
             if (!check_res) {
                 throw new InvalidAuthenticationException("User does not have access to this Application");
             }
-            if (user.getMfaEnabled()){
+            if (user.getMfaEnabled()) {
                 // 2FA Google Authenticator Code认证
                 Object details = authentication.getDetails();
                 if (details instanceof HashMap) {
                     HashMap<String, Object> detailsMap = (HashMap<String, Object>) details;
                     Object code = detailsMap.get("totpcode");
                     boolean res = false;
-                    if(code instanceof String[]){
+                    if (code instanceof String[]) {
                         String[] code_after = (String[]) code;
                         String totpcode = code_after[0];
                         res = gAuth.authorizeUser(user.getName(), Integer.parseInt(totpcode));

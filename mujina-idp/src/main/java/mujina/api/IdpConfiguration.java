@@ -61,20 +61,6 @@ public class IdpConfiguration extends SharedConfiguration {
 
     private void resetUsers() {
         users.clear();
-        users.addAll(Arrays.asList(
-                new FederatedUserAuthenticationToken("admin", "secret",
-                        Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"),
-                        new SimpleGrantedAuthority("ROLE_ADMIN"))),
-                new FederatedUserAuthenticationToken("user0", "secret",
-                        Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"),
-                                new SimpleGrantedAuthority("AUTH_PAGE1"),
-                                new SimpleGrantedAuthority("AUTH_PAGE2"))),
-                new FederatedUserAuthenticationToken("user1", "secret",
-                Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"),
-                        new SimpleGrantedAuthority("AUTH_PAGE1"))),
-                new FederatedUserAuthenticationToken("user2", "secret",
-                        Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"),
-                                new SimpleGrantedAuthority("AUTH_PAGE2")))));
     }
 
     private void resetAttributes() {

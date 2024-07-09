@@ -83,7 +83,6 @@ public class SsoController {
                 "",
                 messageContext.getRelayState());
 
-//        samlMessageHandler.sendAuthnResponse(principal, authnContextClassRefValue, response);
         samlMessageHandler.sendAuthnResponse(principal, response, authnContextClassRefValue);
     }
 
@@ -123,7 +122,6 @@ public class SsoController {
                             .map(Object::toString)
                             .map(SimpleGrantedAuthority::new)
                             .collect(toList()));
-//                    Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
             token.setAttributes(result);
             idpConfiguration.getUsers().removeIf(existingUser -> existingUser.getPrincipal().equals(uid));
             idpConfiguration.getUsers().add(token);
@@ -158,7 +156,7 @@ public class SsoController {
             }
         });
         result.putAll(replacements);
-        //Provide the ability to limit the list attributes returned to the SP
+        // Provide the ability to limit the list attributes returned to the SP
         return result.entrySet().stream()
                 .filter(entry -> !entry.getValue().stream().allMatch(StringUtils::isEmpty))
                 .map(entry -> entry.getKey().equals("urn:mace:dir:attribute-def:uid") ?

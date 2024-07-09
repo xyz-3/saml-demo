@@ -134,12 +134,16 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "/metadata", "/favicon.ico", "/*.css", "/sp.js", "/api/**",
                         assertionConsumerServiceURLPath + "/**",
-                        singleLogoutServiceURLPath + "/**").permitAll()
-                .anyRequest().hasRole("USER")
+                        singleLogoutServiceURLPath + "/**")
+                    .permitAll()
+                .anyRequest()
+                    .hasRole("USER")
                 .and()
-                .httpBasic().authenticationEntryPoint(samlEntryPoint())
+                .httpBasic()
+                    .authenticationEntryPoint(samlEntryPoint())
                 .and()
-                .csrf().disable()
+                .csrf()
+                    .disable()
                 .addFilterBefore(metadataGeneratorFilter(), ChannelProcessingFilter.class)
                 .addFilterAfter(samlFilter(), BasicAuthenticationFilter.class)
                 .addFilterBefore(mujinaSamlLogoutFilter(), BasicAuthenticationFilter.class);
@@ -158,8 +162,8 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     @Bean
     public SAMLLogoutFilter mujinaSamlLogoutFilter() {
-        SAMLLogoutFilter samlLogoutFilter = new SAMLLogoutFilter(successLogoutHandler(), new LogoutHandler[]{samlLogoutHandler()},
-                new LogoutHandler[]{samlLogoutHandler()});
+        SAMLLogoutFilter samlLogoutFilter = new SAMLLogoutFilter(successLogoutHandler(),
+                new LogoutHandler[]{samlLogoutHandler()}, new LogoutHandler[]{samlLogoutHandler()});
         samlLogoutFilter.setProfile(singleLogoutProfile());
         samlLogoutFilter.setFilterProcessesUrl("/logout");
         return samlLogoutFilter;

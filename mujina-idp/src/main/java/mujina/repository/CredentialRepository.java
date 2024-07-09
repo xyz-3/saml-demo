@@ -16,8 +16,6 @@ public class CredentialRepository implements ICredentialRepository {
 
     @Autowired
     private UserGauthRepository userGauthRepository;
-//    @Autowired
-//    private UserRepository userRepository;
 
     private final Map<String, UserTOTP> usersKeys = new HashMap<String, UserTOTP>() {{
         put("user0", null);
@@ -35,16 +33,7 @@ public class CredentialRepository implements ICredentialRepository {
                                     String secretKey,
                                     int validationCode,
                                     List<Integer> scratchCodes) {
-        // DEPRECATED
-//        usersKeys.put(userName, new UserTOTP(userName, secretKey, validationCode, scratchCodes));
-//        Integer userid = userRepository.findIdByName(userName);
-//        userGauthRepository.insertUserGauth(userName, userid, secretKey);
-//        userRepository.updateMfaEnabledById(userid, true);
     }
-
-//    public UserTOTP getUser(String username) {
-//        return usersKeys.get(username);
-//    }
 
     @Data
     @NoArgsConstructor

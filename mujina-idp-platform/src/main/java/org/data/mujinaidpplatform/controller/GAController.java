@@ -13,7 +13,6 @@ import org.data.mujinaidpplatform.dto.ValidateCodeDto;
 import org.data.mujinaidpplatform.dto.Validation;
 import org.data.mujinaidpplatform.repository.CredentialRepository;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -49,7 +48,7 @@ public class GAController {
     }
 
     @GetMapping({"qrcode", "/qrcode.html"})
-    public String qrcode(){
+    public String qrcode() {
         return "qrcode";
     }
 

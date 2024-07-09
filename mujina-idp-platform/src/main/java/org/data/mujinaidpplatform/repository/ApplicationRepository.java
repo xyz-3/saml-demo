@@ -5,10 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface ApplicationRepository extends JpaRepository<Application, Integer> {
-
-    @Query("SELECT a FROM application a WHERE a.entity_id = :entityId")
-    Application findByEntityId(String entityId);
-
     @Query("SELECT a.id FROM application a WHERE a.entity_id = :entityId")
     Integer findIdByEntityId(String entityId);
 }

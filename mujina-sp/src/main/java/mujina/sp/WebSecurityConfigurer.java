@@ -168,7 +168,7 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Bean
     public SimpleUrlLogoutSuccessHandler successLogoutHandler() {
         SimpleUrlLogoutSuccessHandler successLogoutHandler = new SimpleUrlLogoutSuccessHandler();
-         successLogoutHandler.setDefaultTargetUrl("/"); // Optional: set default target URL after logout success
+        successLogoutHandler.setDefaultTargetUrl("/"); // Optional: set default target URL after logout success
         return successLogoutHandler;
     }
 
@@ -229,7 +229,8 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public MetadataGeneratorFilter metadataGeneratorFilter() throws InvalidKeySpecException, CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException, XMLStreamException {
+    public MetadataGeneratorFilter metadataGeneratorFilter() throws InvalidKeySpecException, CertificateException,
+            NoSuchAlgorithmException, KeyStoreException, IOException, XMLStreamException {
         return new MetadataGeneratorFilter(metadataGenerator());
     }
 
@@ -297,7 +298,8 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public MetadataGenerator metadataGenerator() throws NoSuchAlgorithmException, CertificateException, InvalidKeySpecException, KeyStoreException, IOException, XMLStreamException {
+    public MetadataGenerator metadataGenerator() throws NoSuchAlgorithmException, CertificateException,
+            InvalidKeySpecException, KeyStoreException, IOException, XMLStreamException {
         MetadataGenerator metadataGenerator = new MetadataGenerator();
         metadataGenerator.setEntityId(spEntityId);
         metadataGenerator.setEntityBaseURL(spBaseUrl);
@@ -308,7 +310,8 @@ public class WebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public JKSKeyManager keyManager() throws InvalidKeySpecException, CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException, XMLStreamException {
+    public JKSKeyManager keyManager() throws InvalidKeySpecException, CertificateException, NoSuchAlgorithmException,
+            KeyStoreException, IOException, XMLStreamException {
         KeyStore keyStore = KeyStoreLocator.createKeyStore(spPassphrase);
         KeyStoreLocator.addPrivateKey(keyStore, spEntityId, spPrivateKey, spCertificate, spPassphrase);
         return new JKSKeyManager(keyStore, Collections.singletonMap(spEntityId, spPassphrase), spEntityId);

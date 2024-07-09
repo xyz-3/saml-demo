@@ -27,7 +27,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public UserDto getUser(String name, String password) {
         Optional<User> user = userRepository.findByNameAndPassword(name, password);
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             return null;
         }
         List<String> authorities = userAuthoritiesRepository.findAllAuthoritiesByUserId(user.get().getId());

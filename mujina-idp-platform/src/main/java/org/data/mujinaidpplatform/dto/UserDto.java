@@ -34,15 +34,4 @@ public class UserDto {
         this.applications = applications;
         this.authorities = authorities;
     }
-
-    public UserDto(User user){
-        this.id = user.getId();
-        this.name = user.getName();
-        this.password = user.getPassword();
-        this.email = user.getEmail();
-        this.applications = null;
-        List<String> authorities = new ArrayList<>();
-        authorities.add("ROLE_USER");
-        this.authorities = authorities;
-    }
 }

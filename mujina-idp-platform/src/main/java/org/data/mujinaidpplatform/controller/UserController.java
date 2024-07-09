@@ -39,13 +39,13 @@ public class UserController {
 
     @PostMapping("/login")
     public String loginPost(@RequestParam("username") String username, @RequestParam("password") String password,
-                            RedirectAttributes redirectAttributes){
+                            RedirectAttributes redirectAttributes) {
         UserDto user = userDao.getUser(username, password);
-        if(user != null){
+        if (user != null) {
             redirectAttributes.addFlashAttribute("user", user);
             if (user.getAuthorities().contains("ROLE_ADMIN")) {
                 return "redirect:/platform.html";
-            }else{
+            } else {
                 return "redirect:/Profile.html";
             }
         }
@@ -53,13 +53,13 @@ public class UserController {
     }
 
     @PostMapping("/registerUser")
-    public ResponseEntity<Map<String, String>> register(@RequestParam Map<String, String> allParams){
+    public ResponseEntity<Map<String, String>> register(@RequestParam Map<String, String> allParams) {
         String username = allParams.get("username");
         String password = allParams.get("password");
         String passwordrepeat = allParams.get("passwordrepeat");
         String email = allParams.get("email");
         Map<String, String> response = new HashMap<>();
-        if(!passwordrepeat.equals(password)){
+        if (!passwordrepeat.equals(password)) {
             response.put("message", "Passwords do not match");
             return ResponseEntity.badRequest().body(response);
         }
@@ -69,12 +69,12 @@ public class UserController {
     }
 
     @GetMapping("/register.html")
-    public String register(){
+    public String register() {
         return "register";
     }
 
     @GetMapping({"platform", "/platform.html"})
-    public String platform(ModelMap modelMap){
+    public String platform(ModelMap modelMap) {
         List<UserDto> users = userDao.getAllUsers();
         // filter admin out of users
         UserDto admin = users.stream().filter(user -> user.getAuthorities().contains("ROLE_ADMIN")).findFirst().orElse(null);
@@ -83,17 +83,17 @@ public class UserController {
     }
 
     @GetMapping({"profile", "/Profile.html"})
-    public String profile(ModelMap modelMap){
+    public String profile(ModelMap modelMap) {
         return "profile";
     }
 
     @GetMapping("/logout")
-    public String logout(){
+    public String logout() {
         return "redirect:/";
     }
 
     @GetMapping("/AllUsers.html")
-    public String allUsers(ModelMap modelMap){
+    public String allUsers(ModelMap modelMap) {
         List<UserDto> users = userDao.getAllUsers();
         // filter admin out of users
         UserDto admin = users.stream().filter(user -> user.getAuthorities().contains("ROLE_ADMIN")).findFirst().orElse(null);
@@ -103,7 +103,7 @@ public class UserController {
     }
 
     @GetMapping("/Applications.html")
-    public String applications(ModelMap modelMap){
+    public String applications(ModelMap modelMap) {
         List<Application> apps = applicationDao.getAllApplications();
         modelMap.addAttribute("apps", apps);
         return "Applications";
@@ -116,7 +116,7 @@ public class UserController {
         // filter admin out of users
         users.remove(admin);
         for (UserDto user : users) {
-            if(user.equals(admin)){
+            if (user.equals(admin)) {
                 continue;
             }
             String addAuthority = allParams.get("addAuthority_" + user.getName());
@@ -153,15 +153,15 @@ public class UserController {
     }
 
     @PostMapping("/addUserToApp")
-    public ResponseEntity<Map<String, String>> addUserToApp(@RequestParam Map<String, String> allParams){
+    public ResponseEntity<Map<String, String>> addUserToApp(@RequestParam Map<String, String> allParams) {
         String userName = allParams.get("userName");
         String entityId = allParams.get("entity_id");
         boolean ret = userApplicationDao.addUserApplication(userName, entityId);
         Map<String, String> response = new HashMap<>();
-        if(ret){
+        if (ret) {
             response.put("message", "Success!");
             return ResponseEntity.ok(response);
-        }else{
+        } else {
             response.put("message", "Failed!");
             return ResponseEntity.badRequest().body(response);
         }

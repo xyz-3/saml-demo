@@ -18,18 +18,6 @@ public class ApplicationDaoImpl implements ApplicationDao {
     private ApplicationRepository applicationRepository;
 
     @Override
-    public String getSloUrlByEntityId(String entityId) {
-        Application application = applicationRepository.findByEntityId(entityId);
-        if(application == null){
-            return null;
-        }else{
-            String base_url = application.getBaseUrl();
-            String slo_location_path = application.getSloLocationPath();
-            return base_url + slo_location_path;
-        }
-    }
-
-    @Override
     public String registerApplication(String name, String entityId, String baseUrl,
                                       String acsLocationPath, String sloLocationPath) throws IOException {
         Application application = new Application();

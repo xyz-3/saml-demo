@@ -15,9 +15,9 @@ public class ApplicationDaoImpl implements ApplicationDao {
     @Override
     public String getSloUrlByEntityId(String entityId) {
         Application application = applicationRepository.findByEntityId(entityId);
-        if(application == null){
+        if (application == null) {
             return null;
-        }else{
+        } else {
             String base_url = application.getBaseUrl();
             String slo_location_path = application.getSloLocationPath();
             return base_url + slo_location_path;

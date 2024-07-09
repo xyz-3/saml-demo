@@ -51,13 +51,13 @@ public class SloController {
 
     @GetMapping("/SingleLogoutService")
     public void singleLogoutServiceGet(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-            throws IOException, MarshallingException, SignatureException, MessageEncodingException, ValidationException, SecurityException, MessageDecodingException, MetadataProviderException, ServletException {
+            throws MessageEncodingException, ValidationException, SecurityException, MessageDecodingException, MetadataProviderException, ServletException {
         doSLO(request, response, authentication, false);
     }
 
     @PostMapping("/SingleLogoutService")
     public void singleLogoutServicePost(HttpServletRequest request, HttpServletResponse response, Authentication authentication)
-            throws IOException, MarshallingException, SignatureException, MessageEncodingException, ValidationException, SecurityException, MessageDecodingException, MetadataProviderException, ServletException {
+            throws MessageEncodingException, ValidationException, SecurityException, MessageDecodingException, MetadataProviderException, ServletException {
         doSLO(request, response, authentication, true);
     }
 
@@ -99,7 +99,6 @@ public class SloController {
         // delete cookies from the web browser
         Arrays.stream(request.getCookies()).forEach(cookie -> {
             cookie.setMaxAge(0);
-//            response.addCookie(cookie);
         });
 
         samlMessageHandler.sendLogoutResponse(samlPrincipal, StatusCode.SUCCESS_URI, response);
@@ -141,7 +140,6 @@ public class SloController {
                             .map(Object::toString)
                             .map(SimpleGrantedAuthority::new)
                             .collect(toList()));
-//                    Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
             token.setAttributes(result);
             idpConfiguration.getUsers().removeIf(existingUser -> existingUser.getPrincipal().equals(uid));
             idpConfiguration.getUsers().add(token);

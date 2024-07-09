@@ -1,6 +1,7 @@
 package org.data.mujinaidpplatform.Entity;
 
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 
 @Entity(name = "user_authorities")

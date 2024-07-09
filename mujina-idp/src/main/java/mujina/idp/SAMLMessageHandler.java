@@ -81,10 +81,8 @@ public class SAMLMessageHandler {
 
         SAMLObject inboundSAMLMessage = messageContext.getInboundSAMLMessage();
 
-//        AuthnRequest authnRequest = (AuthnRequest) inboundSAMLMessage;
         //lambda is poor with Exceptions
         for (ValidatorSuite validatorSuite : validatorSuites) {
-//            validatorSuite.validate(authnRequest);
             validatorSuite.validate(inboundSAMLMessage);
         }
         return messageContext;

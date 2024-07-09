@@ -1,6 +1,7 @@
 package mujina.idp;
 
 import java.util.Optional;
+
 import mujina.api.IdpConfiguration;
 import mujina.saml.SAMLBuilder;
 import org.joda.time.DateTime;
@@ -61,7 +62,7 @@ public class MetadataController {
         entityDescriptor.setEntityID(idpConfiguration.getEntityId());
         entityDescriptor.setID(SAMLBuilder.randomSAMLId());
         entityDescriptorValidUntilMillis.ifPresent(
-            value -> entityDescriptor.setValidUntil(new DateTime().plusMillis(value)));
+                value -> entityDescriptor.setValidUntil(new DateTime().plusMillis(value)));
 
         Signature signature = buildSAMLObject(Signature.class, Signature.DEFAULT_ELEMENT_NAME);
 
@@ -80,7 +81,7 @@ public class MetadataController {
 
         idpssoDescriptor.addSupportedProtocol(SAMLConstants.SAML20P_NS);
 
-       // SingleSignOnService
+        // SingleSignOnService
         SingleSignOnService singleSignOnService = buildSAMLObject(SingleSignOnService.class, SingleSignOnService.DEFAULT_ELEMENT_NAME);
         singleSignOnService.setLocation(idpBaseUrl + "/SingleSignOnService");
         singleSignOnService.setBinding(samlBinding);
@@ -91,8 +92,6 @@ public class MetadataController {
         singleLogoutService.setLocation(idpBaseUrl + "/SingleLogoutService");
         singleLogoutService.setBinding(samlBinding);
         idpssoDescriptor.getSingleLogoutServices().add(singleLogoutService);
-
-
 
 
         X509KeyInfoGeneratorFactory keyInfoGeneratorFactory = new X509KeyInfoGeneratorFactory();

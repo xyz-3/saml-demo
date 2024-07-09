@@ -72,20 +72,6 @@ public class SAMLBuilder {
         return status;
     }
 
-/*    public static Status buildStatus(String value, String subStatus, String message) {
-        Status status = buildStatus(value);
-
-        StatusCode subStatusCode = buildSAMLObject(StatusCode.class, StatusCode.DEFAULT_ELEMENT_NAME);
-        subStatusCode.setValue(subStatus);
-        status.getStatusCode().setStatusCode(subStatusCode);
-
-        StatusMessage statusMessage = buildSAMLObject(StatusMessage.class, StatusMessage.DEFAULT_ELEMENT_NAME);
-        statusMessage.setMessage(message);
-        status.setStatusMessage(statusMessage);
-
-        return status;
-    }*/
-
     /*
     构建一个 Assertion 对象，包含了 SAMLPrincipal、AuthnContextClassRef、Status 和 entityId
      */
@@ -122,6 +108,7 @@ public class SAMLBuilder {
 
         return assertion;
     }
+
     /*
     为一个 SignableXMLObject 对象签名
      */

@@ -11,7 +11,6 @@ import org.springframework.security.saml.context.SAMLMessageContext;
 import org.springframework.security.saml.processor.SAMLBinding;
 import org.springframework.security.saml.processor.SAMLProcessorImpl;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
@@ -45,7 +44,7 @@ public class ConfigurableSAMLProcessor extends SAMLProcessorImpl {
         AssertionConsumerService assertionConsumerService = roleDescriptor.getAssertionConsumerServices().stream().filter(service -> service.isDefault()).findAny().orElseThrow(() -> new RuntimeException("No default ACS"));
         assertionConsumerService.setBinding(spConfiguration.getProtocolBinding());
 
-        if(location.equals(spConfiguration.getSloUrl())){
+        if (location.equals(spConfiguration.getSloUrl())) {
             assertionConsumerService.setBinding(spConfiguration.getSingleLogoutServiceURL());
             return super.sendMessage(samlContext, spConfiguration.isNeedsSigning(), binding);
         }

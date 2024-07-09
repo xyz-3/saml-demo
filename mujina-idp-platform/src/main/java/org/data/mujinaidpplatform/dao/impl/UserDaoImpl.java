@@ -22,10 +22,11 @@ public class UserDaoImpl implements UserDao {
     private UserAuthoritiesRepository userAuthoritiesRepository;
     @Autowired
     private UserApplicationRepository userApplicationRepository;
+
     @Override
     public UserDto getUser(String name, String password) {
         Optional<User> user = userRepository.findByNameAndPassword(name, password);
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             return null;
         }
         List<String> authorities = userAuthoritiesRepository.findAllAuthoritiesByUserId(user.get().getId());
@@ -34,11 +35,12 @@ public class UserDaoImpl implements UserDao {
         UserDto userDto = new UserDto(user.get(), applications, authorities);
         return userDto;
     }
+
     @Override
     public List<UserDto> getAllUsers() {
         List<User> users = userRepository.findAll();
         List<UserDto> userDtos = new ArrayList<>();
-        for(User user : users){
+        for (User user : users) {
             List<String> authorities = userAuthoritiesRepository.findAllAuthoritiesByUserId(user.getId());
             List<Integer> applicationIds = userApplicationRepository.findApplicationIdByUserId(user.getId());
             List<String> applications = userApplicationRepository.findApplicationsByUserId(applicationIds);
@@ -51,7 +53,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void addAuthority(Integer id, String authority) {
         Optional<User> user = userRepository.findById(id);
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             return;
         }
         userAuthoritiesRepository.addAuthority(user.get().getId(), authority);
@@ -60,7 +62,7 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void removeAuthority(Integer id, String authority) {
         Optional<User> user = userRepository.findById(id);
-        if(user.isEmpty()){
+        if (user.isEmpty()) {
             return;
         }
         userAuthoritiesRepository.removeAuthority(user.get().getId(), authority);

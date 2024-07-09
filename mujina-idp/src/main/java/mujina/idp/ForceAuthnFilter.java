@@ -44,7 +44,7 @@ public class ForceAuthnFilter extends OncePerRequestFilter {
             throw new IllegalArgumentException(e);
         }
         idpConfiguration.setIssuer(messageContext.getInboundMessageIssuer());
-        if(servletPath.endsWith("SingleSignOnService")) {
+        if (servletPath.endsWith("SingleSignOnService")) {
             AuthnRequest authnRequest = (AuthnRequest) messageContext.getInboundSAMLMessage();
             if (authnRequest.isForceAuthn()) {
                 SecurityContextHolder.getContext().setAuthentication(null);
