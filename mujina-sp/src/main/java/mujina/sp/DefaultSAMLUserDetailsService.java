@@ -39,7 +39,10 @@ public class DefaultSAMLUserDetailsService implements SAMLUserDetailsService {
                 .collect(Collectors.toList());
         attributes.sort(comparing(SAMLAttribute::getName));
         NameID nameID = credential.getNameID();
-        return new SAMLPrincipal(nameID.getValue(), nameID.getFormat(), attributes, authorities);
+        String relayState = credential.getRelayState();
+        SAMLPrincipal principal = new SAMLPrincipal(nameID.getValue(), nameID.getFormat(), attributes, authorities);
+        principal.setRelayState(relayState);
+        return principal;
     }
 
 }
