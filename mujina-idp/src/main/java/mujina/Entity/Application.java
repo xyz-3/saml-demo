@@ -34,4 +34,7 @@ public class Application {
 
     @Column(name = "created_at", updatable = false, nullable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp createdAt;
+
+    @Column(name = "cert", length = 2047)
+    private String cert;
 }

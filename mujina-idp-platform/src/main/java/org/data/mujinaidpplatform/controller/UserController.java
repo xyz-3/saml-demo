@@ -16,9 +16,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -137,16 +141,43 @@ public class UserController {
         return "redirect:/AllUsers.html";
     }
 
+    private String extractCertificateContent(MultipartFile certificate) throws IOException {
+        StringBuilder content = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(certificate.getInputStream(), StandardCharsets.UTF_8))) {
+            String line;
+            boolean isCertificateContent = false;
+
+            while ((line = reader.readLine()) != null) {
+                if (line.contains("-----BEGIN CERTIFICATE-----")) {
+                    isCertificateContent = true;
+                } else if (line.contains("-----END CERTIFICATE-----")) {
+                    isCertificateContent = false;
+                } else if (isCertificateContent) {
+                    content.append(line);
+                }
+            }
+        }
+        return content.toString().trim();
+    }
+
+
     @PostMapping("/registerApp")
-    public ResponseEntity<byte[]> registerApplication(@RequestParam Map<String, String> allParams) throws IOException {
+    public ResponseEntity<byte[]> registerApplication(@RequestParam Map<String, String> allParams,
+                                                      @RequestParam MultipartFile certificate) throws IOException {
         String appName = allParams.get("appName");
         String entityId = allParams.get("entityId");
         String baseUrl = allParams.get("baseUrl");
         String acsPath = allParams.get("acsPath");
         String logoutPath = allParams.get("sloPath");
 
+        // Read the certificate file
+        String cert = extractCertificateContent(certificate);
+
+        // TODO Check if the application already exists
+
+
         // Register the application
-        String metadata = applicationDao.registerApplication(appName, entityId, baseUrl, acsPath, logoutPath);
+        String metadata = applicationDao.registerApplication(appName, entityId, baseUrl, acsPath, logoutPath, cert);
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=metadata.xml");
         return new ResponseEntity<>(metadata.getBytes(), headers, HttpStatus.OK);

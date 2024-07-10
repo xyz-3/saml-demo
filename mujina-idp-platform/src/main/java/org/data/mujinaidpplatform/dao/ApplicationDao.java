@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ApplicationDao {
     String registerApplication(String name, String entityId, String baseUrl,
-                               String acsLocationPath, String sloLocationPath) throws IOException;
+                               String acsLocationPath, String sloLocationPath, String cert) throws IOException;
 
     List<Application> getAllApplications();
 }

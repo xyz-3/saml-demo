@@ -80,7 +80,7 @@
         </table>
 
         <h2>Register New Application</h2>
-        <form onsubmit="registerApp(event)">
+        <form onsubmit="registerApp(event)" enctype="multipart/form-data">
             <table>
                 <tr>
                     <td><label for="appName">Application Name:</label></td>
@@ -102,7 +102,17 @@
                     <td><label for="sloPath">SLO Path:</label></td>
                     <td><input type="text" id="sloPath" name="sloPath" required/></td>
                 </tr>
+                <tr>
+                    <td><label for="certificate">Certificate:</label></td>
+                    <td><input type="file" id="certificate" name="certificate" required/></td>
+                </tr>
             </table>
+            <p></p>
+            <div>
+                <label for="certificate">How to generate your own key and certificate:</label>
+                <pre style="background-color: lightgrey; padding: 10px; border-radius: 5px">> openssl req -newkey rsa:2048 -nodes -keyout local.key -x509 -days 365 -out local.crt </pre>
+                <label>And upload local.crt</label>
+            </div>
             <p></p>
             <button type="submit" class="button">Register Application</button>
         </form>

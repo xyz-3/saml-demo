@@ -35,4 +35,7 @@ public class Application {
     // timestamp type
     @Column(name = "created_at")
     private Timestamp createdAt;
+
+    @Column(name = "cert", length = 2047)
+    private String cert;
 }
