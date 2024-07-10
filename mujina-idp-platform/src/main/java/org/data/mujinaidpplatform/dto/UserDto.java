@@ -14,14 +14,16 @@ public class UserDto {
     private String name;
     private String password;
     private String email;
+    private boolean mfa_enabled;
     private List<String> applications;
     private List<String> authorities;
 
-    public UserDto(Integer id, String name, String password, String email, List<String> applications, List<String> authorities) {
+    public UserDto(Integer id, String name, String password, String email, boolean mfa, List<String> applications, List<String> authorities) {
         this.id = id;
         this.name = name;
         this.password = password;
         this.email = email;
+        this.mfa_enabled = mfa;
         this.applications = applications;
         this.authorities = authorities;
     }
@@ -31,6 +33,7 @@ public class UserDto {
         this.name = user.getName();
         this.password = user.getPassword();
         this.email = user.getEmail();
+        this.mfa_enabled = user.getMfa_enabled();
         this.applications = applications;
         this.authorities = authorities;
     }

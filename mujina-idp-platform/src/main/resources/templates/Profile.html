@@ -21,8 +21,15 @@
             <li>Authority</li>
             <li th:text="${authority}"></li>
         </ul>
-        <a class="button" id="generateQRCodeBtn" th:href="@{/generate/{username}(username=${user.name})}">
-            Add Google Authenticator Account</a>
+        <ul th:each="mfa : ${user.mfa_enabled}">
+            <li>Google Authenticator</li>
+            <li th:text="${mfa} ? Yes : No"></li>
+        </ul>
+        <a class="button" id="generateQRCodeBtn"
+           th:if="${not user.mfa_enabled}"
+           th:href="@{/generate/{username}(username=${user.name})}">
+            Add Google Authenticator Account
+        </a>
         <section class="powered-by">
             <a href="https://openconext.org/" target="_blank" rel="noreferrer noopener">Copyright © 2018 OpenConext</a>
         </section>

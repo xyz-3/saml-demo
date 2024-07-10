@@ -13,6 +13,7 @@
                 <tr>
                     <th>Username</th>
                     <th>Email</th>
+                    <th>MFA</th>
                     <th>Applications</th>
                     <th>Authorities</th>
                     <th>Add Authorities</th>
@@ -23,6 +24,10 @@
                 <tr th:each="user : ${users}">
                     <td th:text="${user.name}"></td>
                     <td th:text="${user.email}"></td>
+                    <td>
+                        <span th:if="${user.mfa_enabled}">Yes</span>
+                        <span th:if="${not user.mfa_enabled}">No</span>
+                    </td>
                     <td th:text="${user.applications}"></td>
                     <td th:text="${user.authorities}"></td>
                     <td>
