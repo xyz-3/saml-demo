@@ -37,6 +37,9 @@ public class UserDaoImpl implements UserDao {
     @Override
     public Boolean checkUserAppAccess(Integer userId, String entity) {
         List<Integer> applicationIds = userApplicationRepository.findApplicationIdByUserId(userId);
+        if(entity == null){
+            return !applicationIds.isEmpty();
+        }
         Integer appId = applicationRepository.findByEntityId(entity).getId();
         return applicationIds.contains(appId);
     }

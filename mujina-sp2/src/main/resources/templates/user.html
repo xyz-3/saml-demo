@@ -6,11 +6,13 @@
     <link rel="stylesheet" type="text/css" href="/main.css"/>
 </head>
 <body>
-    <section class="user-container">
+    <section class="login-container">
         <section class="attributes">
-            <h1>Service Provider</h1>
+            <h1>Mock Service Provider</h1>
             <a class="button" th:href="@{/logout}">Logout</a>
-            <p>Welcome, <span th:text="${user.nameID}"></span></p>
+            <p>Welcome, <span th:text="${user.nameID}"></span>!</p>
+            <p>Your roles: <span th:text="${authorities}"></span></p>
+            <p th:if="${#lists.size(authorities) > 1}">Here are the pages you can visit:</p>
 <!--            <p>The following attributes were provided by your identity provider:</p>-->
 <!--            <ul>-->
 <!--                <li th:text="${user.nameIDType}"></li>-->
@@ -26,7 +28,7 @@
                 <a class="button" th:if="${authorities.?[authority == 'ROLE_2'].size() > 0}" th:href="@{/page2.html}">See role2 page.</a>
             </div>
         </section>
-        <a class="powered-by" href="https://openconext.org/" target="_blank">Copyright © 2018 OpenConext</a>
+<!--        <a class="powered-by" href="https://openconext.org/" target="_blank">Copyright © 2018 OpenConext</a>-->
     </section>
 </body>
 </html>

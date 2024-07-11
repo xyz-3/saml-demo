@@ -6,22 +6,22 @@
     <link rel="stylesheet" type="text/css" href="/main.css">
 </head>
 <body>
-    <section class="user-container">
+    <section class="login-container">
         <section class="attributes">
-            <h1>Service Provider</h1>
+            <h1>Mock Service Provider</h1>
             <a class="button" th:href="@{/logout}">Logout</a>
             <p>This is admin user page.</p>
-            <p>The following attributes were provided by your identity provider:</p>
-            <ul>
-                <li th:text="${user.nameIDType}"></li>
-                <li th:text="${user.nameID}"></li>
-            </ul>
-            <ul th:each="attr : ${user.attributes}">
-                <li th:text="${attr.name}"></li>
-                <li th:text="${attr.value}"></li>
-            </ul>
+<!--            <p>The following attributes were provided by your identity provider:</p>-->
+<!--            <ul>-->
+<!--                <li th:text="${user.nameIDType}"></li>-->
+<!--                <li th:text="${user.nameID}"></li>-->
+<!--            </ul>-->
+<!--            <ul th:each="attr : ${user.attributes}">-->
+<!--                <li th:text="${attr.name}"></li>-->
+<!--                <li th:text="${attr.value}"></li>-->
+<!--            </ul>-->
         </section>
-        <a class="powered-by" href="https://openconext.org/" target="_blank">Copyright © 2018 OpenConext</a>
+<!--        <a class="powered-by" href="https://openconext.org/" target="_blank">Copyright © 2018 OpenConext</a>-->
     </section>
 </body>
 </html>

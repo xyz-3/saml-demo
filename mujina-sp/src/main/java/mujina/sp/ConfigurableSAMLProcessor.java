@@ -43,7 +43,8 @@ public class ConfigurableSAMLProcessor extends SAMLProcessorImpl {
         samlContext.setRelayState(request.getRequestURL().toString());
 
         SPSSODescriptor roleDescriptor = (SPSSODescriptor) samlContext.getLocalEntityMetadata().getRoleDescriptors().get(0);
-        AssertionConsumerService assertionConsumerService = roleDescriptor.getAssertionConsumerServices().stream().filter(service -> service.isDefault()).findAny().orElseThrow(() -> new RuntimeException("No default ACS"));
+        AssertionConsumerService assertionConsumerService = roleDescriptor.getAssertionConsumerServices().stream()
+                .filter(service -> service.isDefault()).findAny().orElseThrow(() -> new RuntimeException("No default ACS"));
         assertionConsumerService.setBinding(spConfiguration.getProtocolBinding());
 
         if (location.equals(spConfiguration.getSloUrl())) {
